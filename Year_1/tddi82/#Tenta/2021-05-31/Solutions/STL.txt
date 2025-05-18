@@ -1,0 +1,206 @@
+Notera att svaren i detta facit är inte representativa av hur svaren
+ser ut under tentan, utan det innehåller ett antal olika argument som
+kan svara på frågan. Under tentan räcker det med ett eller två
+argument. Det viktiga är att svaren är *tydliga*. Tänk på at det är
+ditt ansvar att visa på din förståelse, lämna därför inga viktiga
+detaljer osagda.
+
+======================================================================
+
+1. Redogör för vilka algoritmer du använde för att implementera steg 3
+   och steg 6. Förklara varför dessa algoritmer är lämpliga. Notera
+   att kodexempel kan underlätta, men det är inte ett krav.
+
+Det fanns olika versioner av steg 3 och steg 6 under tentan. Nedan
+följer de olika alternativen för steg 3:
+
+- Ta bort alla ord som börjar med stor bokstav.
+- Ta bort alla ord som är kortare än 3 tecken.
+- Ta bort alla ord som börjar och slutar på samma tecken.
+- Ta bort alla ord vars längd är udda.
+- Ta bort alla ord som inte slutar på en bokstav.
+- Ta bort alla ord som börjar med 'a' eller 'A'.
+
+Alla dessa alternativ involverar att ta bort värden från
+databehållaren enligt något kriterium. Därför valdes std::remove_if.
+
+std::remove_if är lämplig eftersom att den lägger alla värden som inte
+uppfyller villkoret i slutet av databehållaren (notera att värden inte
+nödvändigtvis är intakta längre) vilket gör det väldigt enkelt för oss
+att ta bort alla värden som vi inte vill behålla
+m.h.a. databehållarens erase-funktion, d.v.s.:
+
+auto it = std::remove_if(data.begin(), data.end(),
+                         [](std::string const& word) { ... });
+data.erase(it, data.end());
+
+Nedan följer alla alternativ samt svar på frågan för steg 6:
+
+----------------------------------------------------------------------
+
+- Dela listan i två delar, med alla tal som är kortare än genomsnittet
+  till vänster och de som är större till höger.
+
+Notering: Detta steg är onödigt eftersom att nästa steg (steg 7)
+kommer direkt förstöra ordningen. Detta är en "bugg" i tentan, därför
+godtogs det att man skippade detta steg för just det här
+alternativet. Då var det dock viktigt att man redovisade för *varför*
+man hoppade över steget.
+
+std::remove_if delar upp en databehållare i två delar, men tyvärr så
+garanterar den inte att värdena till höger är korrekta värden.
+
+Däremot så fungerar std::partition då den partitionera databehållaren
+i två delar baserat på ett villkor. Det ser ut såhär:
+
+std::partition(data.begin(), data.end(), [avg](std::string const& word)
+                                         {
+                                             return word.size() < avg;
+                                         });
+
+----------------------------------------------------------------------
+
+- Ersätt alla ord som är kortare än genomsnittet med det första ordet i listan.
+
+Att ersätta element i en databehållare går att göra med
+std::transform. Dock så är detta klumpigt eftersom att vi behöver då
+hålla koll på värdet som vi ska ersätta det med. Det skulle se ut såhär:
+
+std::string value { data.front() };
+std::transform(data.begin(), data.end(), data.begin(),
+               [avg, value](std::string const& word)
+               {
+                   if (word.size() < avg)
+                   {
+                       retrun value;
+                   }
+                   return word;
+               });
+
+I detta fall är std::replace_if mer lämplig eftersom att denna
+algoritm är speciellt anpassad för just detta problem. Vi behöver
+endast ange vad villkoret för utbytet är, och vilket värde det ska
+bytas till. Det ser ut såhär:
+
+std::replace_if(data.begin(), data.end(), [avg](std::string const& word)
+                                          {
+                                              return word.size() < avg;
+                                          }, data.front());
+
+----------------------------------------------------------------------
+
+- Skriv ut antalet ord som är längre än genomsnittet.
+
+Här ska vi räkna antalet element som uppfyller ett visst kriterium i
+en databehållare. Det är exakt det problem som algoritmen
+std::count_if löser. Det ser ut såhär:
+
+
+int n { std::count_if(data.begin(), data.end(), [avg](std::string const& word)
+                                                {
+                                                    return word.size() > avg;
+                                                })
+};
+std::cout << "Antal ord som är längre än genomsnittet: " << n << std::endl;
+
+----------------------------------------------------------------------
+
+- Skriv ut det första ordet som är mindre eller lika med genomsnittet.
+
+Vi ska hitta det första värdet som uppfyller vårt villkor. Detta göra
+vi lättast med std::find_if såhär:
+
+auto it = std::find_if(data.begin(), data.end(), [avg](std::string const& word)
+                                                 {
+                                                     return word.size() <= avg;
+                                                 });
+std::cout << "Första ordet som är mindre eller lika med genomsnittet: "
+          << *it << std::endl;
+
+Vanligtvis behöver vi kontrollera huruvida vi faktiskt hittade ett
+värde genom att jämföra iteratorn med data.end(), men i detta fall
+*vet* vi att det kommer lyckas eftersom att:
+
+a) I steg 4 försäkrade vi oss om att databehållaren inte är tom b) Det
+måste finnas minst ett element som är mindre eller lika med
+genomsnittet, för annars skulle genomsnittet för större (fundera på det!).
+
+----------------------------------------------------------------------
+
+- Lägg till tecknet '*' i slutet av alla ord som är lika långa som
+  genomsnittet.
+
+Vi ska göra en modifikation på element som uppfyller ett visst
+kriterium. Det finns ingen algoritm som gör exakt det här, men däremot
+så finns det en algoritm som tillämpar modifikationer på varje
+element, nämligen std::transform. Det vi får göra i detta fall är att
+vi får inkludera villkoret direkt i modifikationen, såhär:
+
+std::transform(data.begin(), data.end(), data.begin(),
+               [avg](std::string const& word)
+               {
+                   if (word.size() == avg)
+                   {
+                       return word + '*';
+                   }
+                   return word;
+               });
+
+======================================================================
+
+2. Algoritmer som ska "ta bort" element från en databehållare flyttar
+   ofta de borttagna elementen till slutet av databehållaren. Varför
+   gör den så istället för att bara ta bort elementen direkt?
+   Diskutera vad du tror.
+
+Iteratorer vet inte hur man tar bort element från en
+databehållare. Iteratorer kan endast användas för att modifiera
+befintlig data (eller lägga till nya element
+m.h.a. t.ex. back_inserter).
+
+std::remove_if är en STL algoritm och vad detta innebär är att den
+opererar på iteratorer, inte databehållare. Detta för att iteratorer
+ger mer kontroll till användaren men också för att då behöver STL
+algoritmen inte anpassas för olika typer av databehållare, utan den
+fungerar för iteratorer.
+
+Dessa två faktan betyder att det är omöjligt för en STL algoritm att
+ta bort element. Därför *måste* algoritmen göra något annat för att
+signalera till användaren vilka element som ska tas bort. Det
+smidigaste sättet att göra det på är att lägga alla värden i slutet
+och sedan returnera en iterator till starten av dessa element, för då
+kan användaren bara säga att "alla element från den här iteratorn till
+slutet ska tas bort".
+
+======================================================================
+  
+3. Vad för fördelar finns det med att använda lambda funktioner
+   istället för vanliga funktioner när vi anropar algoritmer? Finns
+   det något tillfälle då vanliga funktioner inte går att använda?
+   Diskutera.
+
+Vanliga funktioner måste ha ett unikt namn och måste definieras i en
+namnrymd (oftast den globala namnrymden). Detta betyder att om vi vill
+skicka en funktion till en STL algoritm så måste vi definiera denna
+funktion utanför den kontext där algoritmen anropas och vi måste hitta
+på ett lämpligt namn för denna funktion. Detta kan leda till
+"spaghetti" kod eftersom att läsaren av koden måste nu skrolla i koden
+för att se vad funktionen faktiskt gör. Dessutom så skapar vi en massa
+extra namn i koden som egentligen inte behövs, vilket kan sänka hur
+lätt koden är att förstå. I dessa fall är det därför fördelaktigt om
+vi kan kommunicera direkt i STL algoritmen vad funktionen gör, vilket
+är just det lambda funktioner gör. Dessutom så behöver vi inte ge
+lambda funktionen ett namn vilket gör att vi inte skapar en massa
+onödiga namn som kan förvirra läsaren.
+
+En viktigt skillnad mellan vanliga funktioner och lambda funktioner är
+att lambda funktioner har tillstånd (minne). En lambda funktion är
+egentligen ett funktionsobjekt (ett objekt som kan bete sig som en
+funktion), så det betyder att lambda funktionen kan ha datamedlemmar.
+Därför kan vi lagra kopior av (eller referenser till) värden som
+endast existerar i den kontext som lambda funktionen skapas i. Detta
+går inte att göra med vanliga funktioner.
+
+Om vi behöver tillgång till en lokal variabel i vår funktion så
+*måste* vi utnyttja lambda funktioner just för att vanliga funktioner
+inte har möjlighet till detta.

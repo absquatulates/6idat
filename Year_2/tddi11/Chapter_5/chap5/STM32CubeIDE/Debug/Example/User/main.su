@@ -1,0 +1,14 @@
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:95:5:main	32	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:326:13:Clear_Display_Welcome	8	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:337:13:Clear_Display_Board	32	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:360:13:Display_Text	16	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:368:13:Display_Other_Text	16	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:376:6:Initialize_Board	24	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:384:16:Check_Move_Validity	32	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:413:16:Check_Win	24	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:454:16:Check_Full	24	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:486:6:SystemClock_Config	104	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:542:13:SystemHardwareInit	72	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:635:6:Error_Handler	8	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:650:6:TicTacToe_PB_Callback	16	static
+/home/absqua/Desktop/Gitlab/tddi11/Labs/Chapter_5/chap5/Src/main.c:663:6:TicTacToe_TS_Callback	16	static

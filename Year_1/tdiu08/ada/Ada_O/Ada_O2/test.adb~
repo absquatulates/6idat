@@ -1,0 +1,123 @@
+-- Ada.O2 --
+-- hugho678: Samarbetat med carbj841, Carl Björlin, samma program
+
+with Ada.Text_IO;                                 use Ada.Text_IO;
+with Ada.Integer_Text_IO;                         use Ada.Integer_Text_IO;
+with Ada.Float_Text_IO;                           use Ada.Float_Text_IO; 
+--with Ada.Numerics.Elementary_Functions;           use Ada.Numerics.Elementary_Functions;
+--with Ada.Numerics;                                use Ada.Numerics;
+
+procedure Test is
+   
+   --- UNDERPROGRAM ---
+   
+   -- Deluppgift 1 -- operator
+   
+   function "-" (Left: in Integer; Right: in Float) return Float is
+      
+      Diff: Float;
+      
+   begin
+      
+      Diff := Float(Left) - Right;
+      
+      return Diff;
+      
+   end "-";
+   
+   
+   -- Deluppgift 2 -- procedure
+     
+   procedure Deluppgift_2 (S: in out String; B: out Boolean) is
+       
+      
+   begin
+      
+      if S(S'Last) = 'S' or S(S'Last) = 's' then
+	 B := True;
+      else
+	 B := False;
+      end if;
+      
+      if B = True then
+	 Put("Ordet " & S & " var troligtvis i plural från början");
+      elsif B = False then
+	 S(S'Last) := 's';
+	 Put("Ordet " & S & " var troligtvis inte i plural från början");
+      end if;
+	 
+      
+      
+   end Deluppgift_2;
+   
+   
+     
+   -- Deluppgift 3 -- function
+   
+   function Deluppgift_3 (C: in Character) return Boolean is
+      
+      B: Boolean;
+      
+   begin
+      
+      if C = 'S' or C = 's' then
+	 B := True;
+      else
+	 B := False;
+      end if;
+      
+      return B;	   
+      
+   end Deluppgift_3;
+   
+   
+   -- Huvudprogrammets deklareringar
+
+   I: Integer;
+   F: Float;
+   C: Character;
+   S: String(1..5);
+   B: Boolean;
+   
+   -- HUVUDPROGRAM --
+   
+begin
+   B := False;
+   C:= '0';
+   
+   -- Deluppgift 1
+   
+   Put("Mata in ett heltal och ett flyttal: ");
+   Get(I);
+   Get(F);
+   
+   Put("Differensen mellan dem är ");
+   Put(I - F, 0, 2, 0);
+   New_Line(2);
+   
+   
+   -- Deluppgift_2
+   
+   Put("Skriv in ett 5 tecken långt engelskt substantiv: ");
+   Get(S);
+   
+   Deluppgift_2(S, B);
+   
+
+   
+   New_Line(2);
+   
+   
+   -- Deluppgift_3
+   
+   Put("Mata in ett tecken: ");
+   Get(C);
+   
+   if Deluppgift_3(C) = True then
+      Put("Tecknet var sant");
+   else
+      Put("Tecknet var inte sant");
+   end if;
+   
+   
+end Test;   

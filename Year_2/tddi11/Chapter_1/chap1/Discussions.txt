@@ -1,0 +1,16 @@
+1. "or" and add (+) get the same result
+    example: 101 + 010 = 111 (5+2=7)
+             101 | 010 = 111
+
+4. the offset of 0.3 degrees celsius.
+
+5. It's needed to make sure that the heater and cooler don't just flip on and off al the time, this would be the case if it was 0.
+
+
+
+101 + 001 = 101 | 001
+110 
+
+
+1010 1010
+101

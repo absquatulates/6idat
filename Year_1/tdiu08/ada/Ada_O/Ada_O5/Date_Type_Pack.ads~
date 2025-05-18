@@ -1,0 +1,22 @@
+-- Ada.O5 --
+-- hugho678: Samarbetat med carbj841, Carl Björlin, samma program
+
+package Date_Type_Pack is
+   
+   type Date_Type is private;
+   
+   procedure Get (Date: out Date_Type);
+   procedure Put (Date: in Date_Type);
+   
+   Length_Error, Format_Error, Year_Error, Month_Error, Day_Error: exception;
+   
+private
+   
+      type Date_Type is
+      record
+	 Year:  Integer;
+	 Month: Integer;
+	 Day:   Integer;
+      end record;
+   
+end Date_Type_Pack;

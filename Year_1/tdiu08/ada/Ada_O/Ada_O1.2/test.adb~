@@ -1,0 +1,79 @@
+-- Ada.01.1 --
+-- hugho678: Samarbetat med carbj841, Carl Björlin, samma program
+
+with Ada.Text_IO;            use Ada.Text_IO;
+with Ada.Integer_Text_IO;    use Ada.Integer_Text_IO;
+with Ada.FLoat_Text_IO;      use Ada.FLoat_Text_IO; 
+
+
+procedure Test is
+   
+   FP: Float; -- Första Pris
+   SP: Float; -- Sista Pris
+   O: Float;  -- Steg (Ökning)
+   M: Float;  -- Momsprocent
+   
+   
+begin
+   
+   -- Indata
+   loop
+      Put("Första pris: ");
+      Get(FP);
+      
+      exit when FP >= 0.0;
+      
+      Put_Line("Felaktikt värde!");   
+   end loop;   
+   
+   loop
+      Put("Sista pris: ");
+      Get(SP);
+      
+      exit when SP >= FP;
+      
+      Put_Line("Felaktigt värde!");
+   end loop;
+   
+   loop
+      Put("Steg: ");
+      Get(O);
+      
+      exit when O >= 0.0;
+      
+      Put_Line("Felaktigt värde!");
+   end loop;   
+   
+   loop
+      Put("Momsprocent: ");
+      Get(M);
+      
+      exit when M >= 0.0 and M <= 100.0;
+      
+      Put_Line("Felaktigt värde!");
+   end loop;
+   
+   New_Line;
+   
+   
+   -- Utdata
+   Put_Line("============ Momstabell ============");
+   Put_Line("Pris utan moms  Moms   Pris med moms");
+   
+   -- Loop
+   loop
+      
+      Put(FP, 6, 2, 0);
+      Put(FP*(M/100.0), 8, 2, 0); 
+      Put(FP+(FP*(M/100.0)), 9, 2, 0);	  	  
+      FP := FP+O;
+      New_Line;	 
+      
+      exit when FP>SP;
+	  
+   end loop;
+      
+      
+      
+   
+end Test;

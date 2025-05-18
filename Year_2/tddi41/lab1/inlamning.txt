@@ -1,0 +1,14 @@
+Lab 1
+
+Vilken/Vilka är gästmaskinerna?
+	De virituella maskiner som vi startar med start_single.sh
+
+Vilken/Vilka är värdmasksinerna?
+	Maskinen därifrån vi startar de virituella maskinerna
+
+
+Kopiera filen /etc/network/interfaces från VM:en till er hemkatalog [förtydligande: den utanför VM:en, alltså på LiU-system]
+	Vi ssh-ade in till gästmaskinen, sedan körde vi kommandot: scp /etc/network/intefaces Liu-ID@ssh.edu.liu.se:./
+
+Kopiera mappen /etc/default och allt dess innehåll från VM:en till er hemkatalog [förtydligande: den utanför VM:en, alltså på LiU-system]
+	Vi ssh-ade in till gästmaskinen, sedan körde vi kommandot: scp -r /etc/default Liu-ID@ssh.edu.liu.se:./

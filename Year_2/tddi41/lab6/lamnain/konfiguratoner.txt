@@ -1,0 +1,97 @@
+KONFIGURATIONER
+
+#----/etc/bind/named.conf.local----#
+
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "hugo.william.com"{
+	type master;
+	file "/etc/bind/zones/hugo.william.com";
+};
+
+
+zone "0.0.10.in-addr.arpa"{
+	type master;
+	file "/etc/bind/zones/rev.10.0.0";
+};
+
+
+#---------------------------------------------------------------------------#
+
+#----/etc/bind/named.conf.options----#
+options {
+	directory "/var/cache/bind";
+	
+	recursion yes;
+	allow-recursion {10.0.0.0/24; };
+	listen-on {10.0.0.2; };
+	// If there is a firewall between you and nameservers you want
+	// to talk to, you may need to fix the firewall to allow multiple
+	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+	// If your ISP provided one or more IP addresses for stable 
+	// nameservers, you probably want to use them as forwarders.  
+	// Uncomment the following block, and insert the addresses replacing 
+	// the all-0's placeholder.
+
+	forwarders {
+		8.8.8.8;
+	};
+	//========================================================================
+	// If BIND logs error messages about the root key being expired,
+	// you will need to update your keys.  See https://www.isc.org/bind-keys
+	//========================================================================
+};
+
+
+#---------------------------------------------------------------------------#
+
+#----/etc/bind/zones/hugo.william.com----#
+;FORWARD
+;
+$TTL	1h
+@ 	IN 	SOA 	ns1.hugo.william.com. root.hugo.william.com.(
+				2024112801 	; SERIAL
+				2h 		; Refresh
+				1h 		; Retry
+				1w 		; expire
+				1h 		; Minimum
+			)
+;
+@ 		IN 	NS	ns1.hugo.william.com.
+@		IN	NS	ns2.hugo.william.com.
+@		IN 	A 	10.0.0.2
+ns1 		IN 	A	10.0.0.2
+ns2 		IN 	A	10.0.0.2
+client-1 	IN 	A	10.0.0.3
+client-2 	IN 	A	10.0.0.4
+gw 		IN 	A	10.0.0.1
+server 		IN 	CNAME 	hugo.william.com.
+
+
+#---------------------------------------------------------------------------#
+
+#----/etc/bind/zones/rev.10.0.0----#
+;REVERSE
+;
+$TTL	1w
+@	IN	SOA	ns1.hugo.william.com. root.hugo.william.com. (
+				2024112802	; Serial
+				1w		; Refresh
+				24h		; Retry
+				4w		; Expire
+				1w 		; Negative Cache TTL
+			)
+;
+@	IN	NS	ns1.hugo.william.com.
+@	IN	NS	ns2.hugo.william.com.
+1	IN	PTR	gw.hugo.william.com.
+2	IN	PTR	server.hugo.william.com.
+3	IN	PTR	client-1.hugo.william.com.
+4	IN	PTR	client-2.hugo.william.com.

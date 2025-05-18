@@ -1,0 +1,49 @@
+Distance Vector Routing: Principles, Testing, and Challenges
+
+1. Introduction
+Distance vector routing is a routing algorithm used in network routing. This report discusses how it works, our testing methods, the limitations of poisoned reverse, and a  solution to solve these limitations.
+
+2. How Distance Vector Routing Works
+Distance vector routing is a distributed algorithm where each router maintains a table (vector) of the shortest known distances to every other router in the network. The key aspects include:
+Routing Table Updates: Each router periodically sends its routing table to neighboring routers.
+Bellman-Ford Algorithm: The algorithm calculates the shortest path by iteratively updating route costs based on received information.
+Convergence: Over multiple iterations, routers converge to the optimal routing paths.
+Loop Prevention Mechanisms: Split horizon and poisoned reverse are commonly used to avoid routing loops.
+
+3. Testing the Algorithms
+
+To validate the implementation of distance vector routing, we conducted several test cases:
+Basic Network Initialization
+Verified that each router correctly initialized its routing table.
+Ensured that initial distance vectors were properly exchanged.
+Dynamic Link Cost Changes
+Simulated changes in link costs to evaluate how quickly routing tables adapted.
+Observed the propagation of updates and network convergence.
+Poisoned Reverse Test
+Tested the poisoned reverse mechanism by introducing indirect loops.
+Verified whether routers effectively ignored incorrect routes.
+Failure Scenarios
+Simulated node failures to assess the network’s ability to recover.
+Checked if incorrect routes persisted due to slow update propagation.
+
+4. Cases Where Poisoned Reverse May Fail
+Poisoned reverse is a technique where a router advertises a route with an infinite metric back to the router from which it learned that route, preventing loops. However, it has certain limitations:
+Large-Scale Networks: Poisoned reverse only prevents loops between directly connected routers. In larger topologies with multiple paths, it does not eliminate loops caused by multi-hop indirect dependencies.
+Count-to-Infinity Problem: If multiple routes exist, the poisoned reverse mechanism may not prevent routers from continuously increasing their cost values, leading to slow convergence.
+Asymmetric Networks: In networks with asymmetric link costs, poisoned reverse may not function effectively if different paths exist with varying costs.
+
+5. Proposed Solution to Poisoned Reverse Failures
+To mitigate the shortcomings of poisoned reverse, several approaches can be implemented:
+Hold-Down Timers: Introduce a timer that prevents routers from updating a route immediately after detecting a change, allowing stabilization before updates are accepted.
+Triggered Updates: Instead of periodic updates, routers should send updates immediately when a significant change occurs.
+Path Poisoning with Sequence Numbers: Implement sequence numbers to distinguish newer updates from outdated ones, ensuring faster convergence.
+Link-State Routing Protocols: In large networks, link-state routing (e.g., OSPF) can be used instead of distance vector routing to provide a more robust solution.
+
+6. Conclusion
+Distance vector routing is a reliable and simple algorithm, but it has limitations, particularly with poisoned reverse in complex networks. By implementing additional mechanisms such as hold-down timers and triggered updates, the efficiency and reliability of routing can be significantly improved.
+
+7. References
+Kurose, J. & Ross, K. (2021). Computer Networking: A Top-Down Approach. Pearson.
+Peterson, L. & Davie, B. (2020). Computer Networks: A Systems Approach. Morgan Kaufmann.
+RFC 1058: Routing Information Protocol (RIP). Internet Engineering Task Force (IETF).
+

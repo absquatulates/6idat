@@ -1,0 +1,187 @@
+FRÅGOR
+
+1
+Vad är en auktoritativ namnserver?
+
+    Namnserver med information om IP-addressen för domännamnet
+
+
+Vad är alternativet till en auktoritativ namnserver?
+
+    Rekursiv namnserver
+
+
+Är det skillnad mellan en domän och en zon? Vilken skillnad isåfall?
+
+    domänen är hela strukturen medans zoner ansvarar för sina egna domäner/subdomäner
+
+
+Vad innebär rekursiv slagning? Iterativ? Hur vet DNS-servern du frågar om det är en rekursivt ställd fråga?
+
+    - Rekursiv slagning innebär att DNS-servern tar reda på addressen dit vi vill och sedan svarar till klienten.
+      DNS-servern frågar själv andra DNS-servrar som som kanske har koll på ip-addressen tills den får ett svar
+      och returnerar då svaret till klienten.
+
+    - Iterativ slagning innebär att klienten tar reda på addressen genom att fråga var och en av DNS-servrarna.
+      Vid frågan svarar DNS-servern med en hänvisning till en annan DNS-server som kanske har koll på ip-addressen,
+      detta fortsätter tills ip-addressen har hittats.
+
+    - DNS-servern får reda på att frågan är rekursivt ställd när flagga rd (recursion desired) är satt.
+      Om rd flaggan är satt vet servern att den ska ta reda på addressen (rekursiv slagning).
+      Om rd flaggan INTE är satt svarar servern direkt med en address till en annans server som kan ha mer information (iterativ slagning).
+
+
+
+I DNS delegerar vi ansvaret för olika zoner. Varför?
+
+    Lättare adminstartion av domänen då den är uppdelad i olika zoner. Delegerar ansvar för subdomäner genom zoner.
+
+
+Ovan beskriver vi hur man kommer fram till att liu.se har adressen 130.236.18.52 
+(och hela delegerings-hierarkin från root till auktoriteten för .se-domänen, till liu.se). 
+Hur sker en uppslagning ''åt andra hållet'', där man vill slå upp om adressen 130.236.18.52 motsvarar någon webbadress 
+(enligt din DNS-server)? Du kan vilja läsa om reverse DNS.
+
+    dig -x 130.236.18.52 kommer att leta efter en PTR post istället för A, dvs en post som innehåller domännamnet till en ip-address.
+    Så om en sådan finns kommer DNS-servern svara med domännamnet istället för en ip-adress.
+
+    
+
+
+Kör dig www.liu.se.
+Förklara kortfattat vad de olika delarna av utskriften innebär.
+    
+    root@server:~# dig www.liu.se
+
+    ; <<>> DiG 9.16.50-Debian <<>> www.liu.se
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 62118
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+        Denna del listar allmän info om "query:n" bland annat status, flaggor, svar, auktoritativa poster, mm.
+
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 1232
+    ; COOKIE: 432118612c936e7901000000675dfc2d4dbc2e004e5a90d4 (good)
+
+        Här listas storleken på udp-paketet.
+
+
+    ;; QUESTION SECTION:
+    ;www.liu.se.			IN	A
+
+        Här visas vilken domän vi frågade, vilken typ av fråga (query) som i detta fall är IN (internet)
+        samt A som innehåller en ipv4-address.
+
+
+    ;; ANSWER SECTION:
+    www.liu.se.		7418	IN	A	130.236.18.52
+
+        Här skrivs svaren i form av domännamnet i frågan, uppdateringstid, query-typ IN, A som är en ipv4-address och domänens ip-address.
+
+
+    ;; Query time: 12 msec
+    ;; SERVER: 10.0.0.2#53(10.0.0.2)
+    ;; WHEN: Sat Dec 14 22:44:13 CET 2024
+    ;; MSG SIZE  rcvd: 83
+
+        Här listas responstid, ip till den DNS-server som frågat och vilken port, när frågan ställdes och meddelandestorleken.
+
+
+
+
+
+När du gör en query som till exempel dig ANY liu.se @ns4.liu.se kan du få flera olika sorters resource records (RR) tillbaka. Vad ska A-, AAAA-, NS-, MX- och SOA-records innehålla?
+
+    A: Domänens ip-address
+    AAAA: Domänes ipv6-address
+    NS: Domänens namnservrar
+    MX: Servrarna som hanterar e-post
+    SOA: Primärn namnserver, administratörens mejladdress, serienummer, uppdateringsintervall, Ominladdningsintervall, tidsgräns, TTL
+
+
+Kör dig +trace www.google.com och förklara kortfattat vad som står.
+
+    Det som står är vilka domäner vi traverserar för att hitta till www.google.com 
+
+
+
+2
+Hur sätter man önskad DNS-server på Linux?
+
+    Man öppnar filen "/etc/resolv.conf" och skriver den önskade namnservern, t.ex. "nameserver 8.8.8.8"
+
+Vad är en SOA post? Vad innebär dess olika fält?
+
+    - En SOA post är en DNS-post som anger auktoriteten för en viss zon
+    - En SOA post innehåller: 
+        Primär namnserver
+        Administratörens mejladdress
+        Serienummer 
+        Uppdateringsintervall - sekunder andra namnservrar ska vänta mellan frågor till den primära namnservern
+        Ominladdningsintervall - sekunder serven ska vänta på att skicka igen om den inte får svar från namnserver
+        Tidsgräns - sekunder tills namnservern ska sluta försaka skicka frågor utan svar
+        TTL - sekunder varje post "cache:as" av klienter innan den efterfrågas
+
+
+
+5
+Nu har ni kallat er zon för gruppnamn.example.com. Finns det något i DNS-protokollet som hindrar att ni istället sade att ni var google och hade alla deras domäner? 
+I någon utökning av protokollet? Om ni satte upp en falsk tjänst och pekade adressen gmail.com till den via er DNS-server, är det något i DNS eller annat protokoll 
+som skulle hjälpa en användare som använder er DNS-server att upptäcka bluffen?
+
+    DNSSEC är ett protokoll som verifierar dns-datan genom digitala signaturer i dns-poster. En DNS-resolver kontrollerar att ssignatuern i svaren tillhör rätt aktorativ zon.
+
+
+
+Nu har ni skrivit zonfiler. Om ni skulle delegera auktoritet för users.gruppnamn.example.com hade ni behövt lägga till några rader i er zon-fil. Vilka, och varför? 
+(Ni kan fundera på delegering av delar av reverse-zon, men utöver att lösningen blir ful, är det inte obligatoriskt.)
+
+    Vi hade behövt lägga till:
+
+        users IN NS ns1.users.hugo.william.com
+        users IN NS ns2.users.hugo.william.com
+
+    Då kommer ns1.users.hugo.william.com och ns2.users.hugo.william.com vara de servrar som DNS-servern skickar vidare frågan till om nån vill komma åt
+    domänen users.hugo.william.com. De blir aktorativa namnservrar för underdomänen.
+
+
+
+
+MOTIVERINGAR - se filerna i konfigurationer.txt
+
+I /etc/bind/named.conf.local satte vi våra zoner endligt följande:
+
+    zone "hugo.william.com"{
+	    type master;
+	    file "/etc/bind/zones/hugo.william.com";
+    };
+
+    zone "0.0.10.in-addr.arpa"{
+        type master;
+        file "/etc/bind/zones/rev.10.0.0";
+    };
+
+
+Detta anger vilka filer konfigurationerna ligger för forward- och revers-zonerna
+
+I /etc/bind/named.conf.options lade vi till följande rader:
+
+    recursion yes;
+	allow-recursion {10.0.0.0/24; };
+	listen-on {10.0.0.2; };
+
+    forwarders {
+		8.8.8.8;
+	};
+   
+Detta för att tillåta rekursion och på vilka ip-adresser, vart den ska lyssna för ipv4
+och forwarding till 8.8.8.8 för att kunna komma åt internet
+
+
+Skapade en map för zoner där vi lade filerna "hugo.william.com" och "rev.10.0.0".
+Vi använde mallarna som fanns i /etc/named men skrev om tidsenheterna så att det blev lättare att läsa.
+Vi lade till namnservrarna samt ip-addresser till maskinerna i forward-filen.
+Vi lade till namnservrarna samt domännamnen till maskinerna i reverse-filen.

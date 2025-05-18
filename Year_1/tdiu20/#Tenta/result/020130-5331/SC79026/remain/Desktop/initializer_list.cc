@@ -1,0 +1,47 @@
+#include "polygon.h"
+#include "polygon.h" // multiple include should work
+
+#include <iostream>
+
+int main()
+{
+  std::cout << "Testing the Polygons." << std::endl;
+
+  Polygon p1{3, 4};
+  std::cout << p1 << std::endl;
+
+  Polygon p2{2, 6, 7};
+  std::cout << p2 << std::endl;
+
+  std::cout << p2 + 9 << std::endl;
+
+  //std::cout << 1 + p2 << std::endl;
+
+  try
+  {
+    Polygon p3{ 7, 5, 0, 8 };
+  }
+  catch(std::invalid_argument const& e)
+  {
+    std::cout << e.what() << std::endl;
+  }
+  
+  try
+  {
+    Polygon p4{ 7, 5 };
+    p4 += 0;
+  }
+  catch(std::invalid_argument const& e)
+  {
+    std::cout << e.what() << std::endl;
+  }
+  
+  try
+  {
+    Polygon p5{ 7 };
+  }
+  catch(std::invalid_argument const& e)
+  {
+    std::cout << e.what() << std::endl;
+  }
+}

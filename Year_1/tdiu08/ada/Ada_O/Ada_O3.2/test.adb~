@@ -1,0 +1,194 @@
+-- Ada_O3.2 --
+-- hugho678: Samarbetat med carbj841, Carl Björlin, samma program
+
+with Ada.Text_IO;                                 use Ada.Text_IO;
+with Ada.Integer_Text_IO;                         use Ada.Integer_Text_IO;
+with Ada.Float_Text_IO;                           use Ada.Float_Text_IO; 
+
+
+procedure Test is
+   
+   
+   -- DS1 --
+   
+   type DS1_Array is
+     array (31..35) of Float;
+   
+   procedure Get(DS1: out DS1_Array) is
+      
+   begin
+      
+      for I in reverse 31..35 loop
+	 Get(DS1(I));
+      end loop;
+      
+   end Get;
+   
+   procedure Put(DS1: in DS1_Array) is
+      
+   begin
+      
+      for I in reverse 31..35 loop
+	 Put(DS1(I), 0, 3, 0);
+	 if I /= 31 then
+	    Put(" ");
+	 end if;	 
+      end loop;
+      
+   end Put;
+   
+   
+   -- DS2 --
+   
+   type DS2_Array_Inner is
+     array (Character range '5'..'9') of String(1..5);
+   
+   type DS2_Array is
+     array (False..True) of DS2_Array_Inner;
+   
+   procedure Get(DS2_Inner: out DS2_Array_Inner) is
+      
+      C: Character;
+      
+   begin
+      
+      for I in reverse Character range '5'..'9' loop
+	 Get(DS2_Inner(I));
+	 if I /= '5' then
+	    Get(C);
+	 end if;
+      end loop;
+      
+   end Get; 
+   
+   procedure Get(DS2_Inner: out DS2_Array) is
+      
+      C: Character;
+      
+   begin
+      
+      for I in False..True loop
+	 Get(DS2_Inner(I));
+	 if I = False then
+	    Get(C);
+	 end if;
+	 
+      end loop;
+      
+   end Get;
+   
+   procedure Put(DS2_Array: in DS2_Array_Inner) is
+      
+   begin
+      
+      for I in reverse Character range '5'..'9' loop
+	 Put(DS2_Array(I));
+	 if I /= '5'then
+	    Put(" ");
+	 end if;
+      end loop;
+      
+   end Put;
+   
+   procedure Put(DS2: in DS2_Array) is
+      
+   begin
+      
+      Put(DS2(False));
+      Put(" ");
+      Put(DS2(True));
+      
+   end Put;
+   
+   
+   -- DS3 --
+   
+   type DS3_Array is
+     array (73..74, Character range '4'..'8') of Integer;
+   
+   procedure Get(DS3: out DS3_Array) is
+      
+      C: Character;
+      
+   begin
+      
+      for I in reverse 73..74 loop
+      	 for II in Character range '4'..'8' loop
+	    
+      	    Get(DS3(I, II));
+	    
+	    if II /= '8' then
+	       Get(C);
+	    end if;
+	    
+      	 end loop;
+      end loop;
+      
+   end Get; 
+   
+   
+   procedure Put(DS3: in DS3_Array) is    
+      
+   begin
+      
+      for I in reverse 73..74 loop
+	 		    
+      	 for II in Character range '4'..'8' loop
+	    	    
+      	    Put(DS3(I, II), 0);
+	    if II /= '8' then
+	       Put(" ");
+	    end if;
+      	 end loop;
+	 
+	 if I = 74 then
+	    Put(" ");
+	 end if;
+		 
+      end loop;
+      
+   end Put;
+   
+   -- HUVUDPROGRAM --
+   
+   -- Huvudprogrammets delklarationer
+   
+   DS1: DS1_Array;
+   DS2: DS2_Array;
+   DS3: DS3_Array;
+   
+begin
+   
+   --DS1
+   
+   Put_Line("För DS1:");
+   Put("Mata in datamängd: ");
+   Get(DS1);
+
+   Put("Inmatad datamängd: ");
+   Put(DS1);
+   New_Line(2);
+   
+   
+   --DS2
+   
+   Put_Line("För DS2:");
+   Put("Mata in datamängd: ");
+   Get(DS2);
+   
+   Put("Inmatad datamängd: ");
+   Put(DS2);
+   New_Line(2);
+   
+   
+   -- DS3
+   
+   Put_Line("För DS3:");
+   Put("Mata in datamängd: ");
+   Get(DS3);
+   
+   Put("Inmatad datamängd: ");
+   Put(DS3);
+   New_Line;
+   
+end Test;

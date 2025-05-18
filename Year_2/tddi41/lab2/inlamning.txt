@@ -1,0 +1,69 @@
+Lab 2
+
+Läs man:s man-sida (man man) och svara på följande:
+
+Vilka är de 9 avsnitten?
+	1   Executable programs or shell commands
+	2   System calls (functions provided by the kernel)
+	3   Library calls (functions within program libraries)
+	4   Special files (usually found in /dev)
+	5   File formats and conventions, e.g. /etc/passwd
+	6   Games
+	7   Miscellaneous (including macro packages and conventions), e.g. man(7), groff(7), man-pages(7)
+	8   System administration commands (usually only for root)
+	9   Kernel routines [Non standard]
+
+Vilket avsnitt dokumenterar kommandoradsverktyg som cat eller ls?
+	1   Executable programs or shell commands
+
+
+Kör journalctl, och med hjälp av tail visa bara de fem sista raderna.
+	journalctl -q | tail -n5
+
+Hur byter man ägare på en fil?
+	chown ny_ägare file(s)
+
+Hur gör man en fil körbar enbart för dess grupp?
+	chmod -x file
+	chmod g+x file	
+	eller
+	chmod 676 file
+	(beroende på vilka behörigheter de olika grupperna ska ha)
+
+Hur packar man upp en .tar.gz fil?
+	tar -xvf filename.tar.gz
+
+Hur packar man ner en mapp i en .tar.xz fil?
+	tar -cf filename.tar.xz file
+
+1. Testa echo $USER och echo Hej $USER
+	Testade echo $USER och echo Hej $USER
+2. Lägg till /courses/TDDI41 i er PATH, pröva kör start_single.sh utan att ange sökväg. OBS! Använd variabeln $PATH (inte det den råkar innehålla för ögonblicket). 
+	Lade till /courses/TDDI41 i min PATH med "export PATH=$PATH:/courses/TDDI41"
+3. Gör ändringen permanent
+	"nano ~/.bashrc"
+	Lägg till "export PATH=$PATH:/courses/TDDI41" i filen och spara
+	Starta om terminalen
+4. Sätt LC_ALL till sv_SE.utf-8 och öppna man(1). Vad händer?
+	Ändrar språket till svenska
+
+Hur får man en lista över alla systemd-enheter (units)?
+	systemctl
+
+Hur startar man om sin ssh-server (starta systemtjänsten)?
+	service ssh restart	
+
+SSH:a in i er VM (om ni inte redan är in-ssh:ade). Leta rätt på sshd (ssh-serverns) logg, och visa den posten där det står att ni loggade in. 
+	Sep 17 09:53:07 debian sshd[374]: Accepted password for root from 10.0.2.2 port 51980 ssh2
+	Sep 17 09:53:07 debian sshd[374]: pam_unix(sshd:session): session opened for user root(uid=0) by (uid=0)
+
+
+
+
+Vi skapade en ed25519-nyckel med kommandot "ssh-keygen" som döptes till "sysadminkurs-ed25519"
+Publika delen av nyckeln finns i .pub-filen
+i VM:et's ~/.ssh/authorized_keys finns den publika nyckeln dvs "cat ~/.ssh/authorized_keys" ger output: 
+	"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDwFEwFpyxFNGIWoroHSXB4YUVuVILRDrSUawmFMowhF"
+Vi använd "eval $(ssh-agent)" för att starta ssh-agent och sedan "ssh-add <nyckel>"
+"ssh-add -L" visar ssh-nyckeln
+Det går nu att ssh:a in utan lösenord

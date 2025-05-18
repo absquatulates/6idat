@@ -1,0 +1,30 @@
+Kontakta examinator om något ser konstigt ut eller om du har frågor kring ditt resultat.
+Pga nytt tentaupplägg och oväntat låga prestationer har vi gått igenom era lösningar på del 2 efter tentan för att säkerställa att våra bedömningar är rimliga. Vi har då använt en fingradig poängbedömning. Vi har även tittat på filer som som ej skickats in. Denna genomgång har resulterat i några betygshöjningar jämfört med det betyg som sattes live. Ditt personliga resultat redovisas nedan. Vi kommer även att göra några mindre justeringar i kriterierna inför nästa tentamen.
+
+Denna genomgång har tagit upp oplanerad tid vilket är förklaringen till att resultatet kommer först nu.
+
+Vi redovisar bedömningen i tre delar:
+
+Uppgift 5:
+Konstruktion, skydd och felsäkring av klass, samt implementation av operatorer.
+Bedömning av din lösning: 16 (max 36 poäng)
+
+Uppgift 6:
+Konstruktion av polymorf arvshierarki:
+Bedömning av din lösning: 19 (max 42 poäng)
+
+Generellt (från både 5 och 6):
+Följande av konventioner för filuppdelning, parametermode, kompilering och specifikation:
+Bedömning av din lösning: 21 (max 27 poäng)
+
+Sammanräknad poäng: 56 (max 105)
+
+Bonus: 9 poäng (0/9 poäng)
+
+Din procent: 0.49 (max 100%)
+Ditt betyg: 3 (>85% => 5, >65% => 3, >50% => 3, <50% => U)
+
+Kommentarer på din(a) lösning(ar):
+Polygon saknas felhantering.
+Bacteria använder inte dynamisk polymorfi
+Saknar const och const& på flera ställen

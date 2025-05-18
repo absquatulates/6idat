@@ -1,0 +1,182 @@
+1. Redogör för minst två olika algoritmer som kan användas för att
+   implementera stegen ovan.  Förklara varför dessa algoritmer är
+   lämpliga. Notera att kodexempel kan underlätta, men det är inte ett
+   krav.
+
+I min lösning använder jag std::transform för att utföra en operation
+på varje inläst heltal:
+
+    std::transform(std::istream_iterator<int>{std::cin},
+                   std::istream_iterator<int>{},
+                   std::back_inserter(v), operation);
+
+Anledningen till att std::transform är lämplig i det här fallet är för
+att operationen ska utföras på varje heltal och sedan ersätta det
+gamla heltalet. Om jag bara ville utföra operationen på heltalen utan
+att ersätta dem så hade t.ex. std::for_each passat bättre här, men
+just för att jag vill kunna skriva över de gamla heltalen så är
+std::transform mycket lämpligare. Dessutom kommunicerar std::transform
+väldigt väl vad det är jag gör: Jag transformerar om varje heltal
+enligt min givna operation.
+
+Jag använder även std::sort för att sortera mina heltal enligt ett
+speciellt kriterie:
+
+    std::sort(v.begin(), v.end(), order);
+
+Det finns två alternativ på sortering i standardbiblioteket:
+
+std::sort
+std::stable_sort
+
+Där skillnaden är att om två heltal är lika (d.v.s. de ska ligga på
+"samma plats") så sköter dessa två algoritmer dessa fall olika.
+
+std::stable_sort kommer att bibehålla insättningsordningen mellan
+dessa element medan std::sort får sortera om dem hur den vill så länge
+hela behållaren är sorterad.
+
+När vi jobbar med heltal så spelar ordningen mellan de "lika"
+elementen ingen roll, eftersom att heltal endast innehåller sitt
+värde, inget mer. Därför är std::sort mycket mer lämplig än
+std::stable_sort.
+
+======================================================================
+
+2. Vilka fördelar finns det med att lösa problemet med algoritmer
+   istället för med loopar? Förklara varför dessa fördelar inte finns
+   när vi använder loopar.
+
+Den största skillnaden enligt mig är kommunikation. Som läsare av
+koden måste man i första hand ta reda på VAD koden gör och i de flesta
+fall är man inte ens särskilt intresserad av HUR något görs. STL
+algoritmer underlättar oerhört mycket i denna aspekt.
+
+T.ex.:
+
+int j{0};
+for (int i{0}; i < v.size(); ++i)
+{
+    if (v[i] == 0)
+    {
+        j = i;
+        break;
+    }
+}
+
+är förvisso inte jättesvår att förstå vad den gör och hur den
+fungerar, men jag som läsare får informationen om VAD den gör mycket
+snabbare i följande kodstycke:
+
+auto it { std::find(v.begin(), v.end(), 0) };
+
+I utbyte mot kunskap om HUR det görs. Men det är hela poängen med
+abstraktion, att läsaren av koden ska inte behöva veta allting som
+händer, det viktiga är att förstå vad för problem som löses.
+
+Denna fördel finns inte när vi använder loopar eftersom att vi då
+måste lägga fokus på hur vi löser ett visst problem.
+
+En annan fördel är att dessa algoritmer oftast är MINST lika effektiva
+(snabba) som handskrivna alternativ, ofta t.o.m. snabbare eftersom att
+det har lagts mycket tid och energi på att optimera dessa
+algoritmer. Dessa optimeringar kan man lätt missa om man skriver ihop
+en loop själv.
+
+En tredje fördel är att man skapar en enhetlig kodbas. Om vi använder
+mycket STL algoritmer så kan vi mycket lättare få samma "stil" på
+koden, oavsett hur många som faktiskt skriver koden. Det ökar
+läsligheten signifikant eftersom att man då inte måste lära sig att
+läsa den specifika programmerarens stil utan det räcker att man har
+koll på STL och C++.
+
+======================================================================
+
+3. Finns det några nackdelar med att använda algoritmer?
+    - Om ja: vilka är nackdelarna och varför uppstår de?
+    - Om nej: Förklara vilka fördelar det finns med att använda loopar
+              istället för algoritmer.
+
+Ja, det finns nackdelar. En stor nackdel är att man som programmerare
+inte har lika stor kontroll över vad som händer i en algoritm. Ett
+exempel vore om jag vill loopa igenom vartannat element i en
+behållare. För att göra det med en algoritm så måste jag skapa en egen
+iterator som löser detta åt mig, men med loopar så är det väldigt
+enkelt:
+
+for (int i{0}; i < v.size(); i += 2)
+{
+    // gör saker
+}
+
+En annan nackdel är att algoritmer blir oerhört svårlästa och
+krångliga om man vill göra något som ligger lite utanför vad
+algoritmer är designad att göra. Ett exempel på dett är inläsningen
+till std::map som vi gjorde i sista labben i kursen.
+
+Med en loop:
+
+std::map<std::string, int> m{};
+
+std::string word{};
+while (std::cin >> word)
+{
+    m[word]++;
+}
+
+Med en algoritm:
+
+std::map<std::string, int> m{};
+
+std::for_each(std::istream_iterator<std::string>{std::cin},
+              std::istream_iterator<std::string>{},
+              [&m](std::string const& word)
+              {
+                  m[word]++;
+              });
+
+Läsligheten blev inte ens bättre av algoritmen (man kan
+t.o.m. argumentera att det blev sämre).
+
+======================================================================
+
+4. Skulle ditt program kunna förbättras med ett bättre val av
+   databehållare? Diskutera varför eller varför inte.
+
+Nej, std::vector är den bästa behållaren för det här fallet. För att
+visa varför använder jag uteslutningsmetoden. Följande behållare finns:
+
+- array
+- vector
+- deque
+- forward_list
+- list
+- set
+- map
+- multiset
+- multimap
+- unordered_set
+- unordered_map
+- unordered_multiset
+- unordered_multimap
+
+- Vi vet inte hur många element som ska sparas i den, därför kan vi
+  inte använda array.
+
+- Samma heltal kan sättas in i behållaren flera gånger, därför
+  försvinner: set, map, unordered_set och unordered_map.
+
+- Vi måste kunna sortera behållaren på ett speciellt sätt, därför kan
+  vi inte använda multiset, multimap, unordered_multiset eller
+  unordered_multimap.
+
+- Vi vet att list och forward_list är långsammare än vector, men att
+  de är snabba på insättning och borttagning mitt i listan. Men vi
+  behöver bara stoppa in värden i slutet och detta är vector och deque
+  mycket bättre på.
+
+- deque är långsammare än vector, men den stoppar in saker i början av
+  listan mycket snabbare än vector. Men vi behöver som tidigare sagt
+  bara stoppa in saker i slutet så därför stryker vi deque.
+
+Detta lämnar kvar vector som det bästa alternativet.    

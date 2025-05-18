@@ -1,0 +1,8 @@
+Satt upp nätverk på två extra maskiner
+
+på servern:
+apt install ansible
+konfigurerade /etc/ansible/hosts
+	gruppering och namngivning
+
+

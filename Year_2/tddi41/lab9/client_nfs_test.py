@@ -1,0 +1,53 @@
+import subprocess
+
+#/home mounted
+def test_indirect_mounted():
+    subprocess.run("systemctl restart autofs", shell=True, text=True)
+    result = subprocess.run("tail -10 /var/log/syslog | grep 'mounted indirect on /home'", shell=True, text=True)
+    assert result.returncode == 0
+
+
+#usr/local
+def test_usr_local():
+    result = subprocess.run("df -h | grep '^10.0.0.2:/usr/local'", shell=True, text=True)
+
+
+#fstab
+def test_fstab_usr_local():
+    result = subprocess.run("grep '^10.0.0.2:/usr/local.*nfs.*rsize=8192,wsize=8192,timeo=14,intr' /etc/fstab", shell=True, text=True)
+    assert result.returncode == 0
+
+
+#autofs
+def test_autofs():
+    master_map_name = subprocess.run("grep '^MASTER_MAP_NAME=.*ou=auto.master,ou=automount,ou=admin,dc=hugo,dc=william,dc=com' /etc/default/autofs", shell=True, text=True)
+    ldap_uri = subprocess.run("grep '^LDAP_URI=.*ldap://10.0.0.2' /etc/default/autofs", shell=True, text=True)
+    search_base = subprocess.run("grep '^SEARCH_BASE=.*ou=automount,ou=admin,dc=hugo,dc=william,dc=com' /etc/default/autofs", shell=True, text=True)
+    MAP_OBJECT_CLASS = subprocess.run("grep  '^MAP_OBJECT_CLASS=.*automountMap' /etc/default/autofs", shell=True, text=True)
+    ENTRY_OBJECT_CLASS = subprocess.run("grep  '^ENTRY_OBJECT_CLASS=.*automount' /etc/default/autofs", shell=True, text=True)
+    MAP_ATTRIBUTE = subprocess.run("grep  '^MAP_ATTRIBUTE=.*ou' /etc/default/autofs", shell=True, text=True)
+    ENTRY_ATTRIBUTE = subprocess.run("grep  '^ENTRY_ATTRIBUTE=.*cn' /etc/default/autofs", shell=True, text=True)
+    VALUE_ATTRIBUTE = subprocess.run("grep  '^VALUE_ATTRIBUTE=.*automountInformation' /etc/default/autofs", shell=True, text=True)
+    assert master_map_name.returncode == 0 and ldap_uri.returncode == 0 and search_base.returncode == 0 and MAP_OBJECT_CLASS.returncode == 0 and ENTRY_OBJECT_CLASS.returncode == 0 and MAP_ATTRIBUTE.returncode == 0 and ENTRY_ATTRIBUTE.returncode == 0 and VALUE_ATTRIBUTE.returncode == 0
+
+def test_auto_home():
+    result = subprocess.run("grep '^*ldap:ou=auto.home,ou=automount,ou=admin,dc=hugo,dc=william,dc=com' /etc/auto.home", shell=True, text=True)
+    assert result.returncode == 0 
+
+def test_nsswitch():
+    result = subprocess.run("grep '^automount:.*files.*ldap' /etc/nsswitch.conf", shell=True, text=True)
+    assert result.returncode == 0
+
+def test_autofs_active():
+    result = subprocess.run("systemctl is-active autofs.service", shell=True, text=True)
+    assert result.returncode == 0
+
+def test_autofs_enabled():
+    result = subprocess.run("systemctl is-enabled autofs.service", shell=True, text=True)
+    assert result.returncode == 0
+
+
+#NSSWITCH
+def test_nsswitch():
+    result = subprocess.run("grep '^automount:.*files.*ldap' /etc/nsswitch.conf", shell=True, text=True)
+    assert result.returncode == 0

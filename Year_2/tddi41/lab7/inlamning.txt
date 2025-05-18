@@ -1,0 +1,250 @@
+FRÅGOR:
+
+Vad betyder DIT och hur fungerar det?
+    DIT, Directory Information Tree - trädstruktur för att lagra information i en katalog
+
+Vad betyder förkortningarna dn och dc och hur används de?
+      dn, Distinguished Name - Namn som specifierar namn för en post i DIT
+      dc, Domain component - Representerar del av domännamnet
+
+Vad är ett attribute?
+    Post som beskriver ett objekt i LDAP-katalogen
+
+Vad är en "object class"?
+    Post som beskriver en typ av objekt
+
+Vad är det för skillnad mellan en "structural-" och en "auxiliary object class?
+    Structural - Beskriver primär typ, objektet kan endast ha en
+    Auxiliary - Lägger till fler attributer, objektet kan ha flera
+
+
+
+TILLVÄGAGÅNG:
+
+Vi installerad paketen slapd och ldap-utils med
+	apt update
+	apt install slapd ldap-utils
+sedan körde vi 
+	dpkg-reconfigure slapd
+och följde konfigurationsstegen enligt guiderna
+
+Vi redigerade konfigurationen i /etc/ldap/ldap.conf så att den stämde med vår specifikation
+
+Installerade paket på klienter med
+	apt update
+	apt install libnss-ldapd libpam-ldapd ldap-utils
+och följde konfigurationsstegen
+Redigerade /etc/ldap/ldap.conf för att säkerställa att inställningarna var rätt
+
+När vi testade om vi kunde nå ldapservern med ldapsearch -x så kunde vi inte det utan
+behövde öppna port 389 på servern, detta genom att lägga till regel i /etc/nftables.conf
+
+Vi skapade en Organizational unit kallad users och en användare vid namn oguh med .ldif-filer
+enligt guiderna. Dessa gick att hitta med ldapsearch
+
+Vi lade till "ldap" i /etc/nsswitch.conf på raderna passwd:, group: och shadow:
+Detta gjordes både på klienterna och servern
+
+Användaren kunde nu hittas i klienterna med 
+	getent passwd oguh
+och det gick att logga in MEN den hade ingen home/oguh
+
+Detta fixade vi genom att i /etc/pam.d/common-session på klienterna lägga till raden
+	session required pam_mkhomedir.so skel=/etc/skel/ umask=0077
+Då hade användaren en home/oguh mapp vid nästa inloggning
+
+
+Ldapscripts installerades med
+	apt install ldapscripts
+Sedan konfigurerade vi /etc/ldapscripts/ldapscripts.conf så att den liknade exemplet i guiden men
+följde våran specifikation
+
+Vi pipeade in adminlösenordet i /etc/ldapscripts/ldapscripts.passwd och satte behörighet så att 
+filen enbart var läsbar av admin:
+	echo -m '<lösenord>' | tee /etc/ldapscripts/ldapscripts.passwd
+	chmod 400 /etc/ldapscripts/ldapscripts.passwd
+
+Sedan skapde vi en lokal anväder will på server med kommadot
+	useradd will
+
+Efter det la vi till användaren i LDAP och satte lösenordet till den med kommandot
+	ldapadduser will users
+	ldapsetpasswd will password
+Det gick då att logga in som användaren
+
+
+
+
+SKRIPTTTTTTTT!!!
+
+#!/usr/bin/python3
+import subprocess
+import sys
+import random
+import string
+
+def getNames():
+    file = open(sys.argv[1], "r") 
+    names = file.readlines()
+    return names
+
+def genUsrStr(name):
+    tmp = name[:3]
+    if ' ' in name:
+        spaceIndex = name.rindex(' ')
+        tmp = tmp + name[spaceIndex+1 : ]
+    else:
+        tmp = name[:5]
+    
+    while len(tmp) < 5:
+        tmp += ' '
+    tmp = tmp[:5]
+
+
+    for c in tmp:
+        if c == ' ' or c not in string.ascii_letters:
+            tmp = tmp.replace(c, random.choice(string.ascii_letters))
+
+    return tmp.lower()
+
+def genUsrNmbr(username):
+    tmp = username + str(random.randint(100, 999))
+    return tmp
+
+
+def genPassword():
+    password = ''.join(random.choice(string.ascii_letters) for i in range(7))
+    return password
+
+
+
+
+#main
+names = getNames()
+listOfUsrNames = []
+for name in names:
+    username = genUsrStr(name)
+    username = genUsrNmbr(username)
+
+    while username in listOfUsrNames:
+        username = username[:5]
+        username = genUsrNmbr(username)
+        
+    tmpList = [username]
+    listOfUsrNames = listOfUsrNames + tmpList
+
+
+file = open("usrs.txt", "a")
+
+for username in listOfUsrNames:   
+    subprocess.run(f"useradd -m -s /bin/bash {username}", shell=True, text=True)
+    uid = subprocess.run(f"id -u {username}", shell=True, text=True, capture_output=True)
+    result = subprocess.run(f"ldapadduser {username} users {uid.stdout.strip()}", shell=True, text=True)
+     
+    if result.returncode == 0:
+        password = genPassword()
+        
+        passfile = open("password.txt", "w")
+        passfile.write(f"{username}:{password}")
+        passfile.close()
+
+        subprocess.run("chpasswd < password.txt", shell=True, text=True)
+
+        passfile = open("password.txt", "w")
+        passfile.write(f"{password}\n{password}\n")
+        passfile.close()
+
+        subprocess.run(f"ldapsetpasswd {username} < password.txt 2>/dev/null", shell=True, text=True)
+            #2>/dev/null för att undgå varningar, samma funktion som utan
+        
+        file.write(f"{username}:{password}\n")	
+    else:
+        username = username[:5]
+        username = genUsrNmbr(username)
+        listOfUsrNames.append(username)
+
+subprocess.run("rm -f password.txt", shell=True, text=True)     
+file.close()
+subprocess.run("chmod 400 usrs.txt", shell=True, text=True)
+
+
+
+
+
+
+TESTERNA!
+
+#client_ldap_test.py
+import subprocess
+
+
+def test_ldapsearch():
+    result = subprocess.run("ldapsearch -x | grep hugo.william.com", shell=True, text=True)
+    assert result.returncode == 0
+
+def nslcd_is_active():
+    result = subprocess.run("systemctl is-active nslcd.service | grep active")
+
+def nslcd_is_active():
+    result = subprocess.run("systemctl is-enabled nslcd.service | grep enabled")
+
+
+def test_nss_passwd():
+    result = subprocess.run("grep '^passwd:.*ldap' /etc/nsswitch.conf")
+    assert result.returncode == 0
+
+def test_nss_group():
+    result = subprocess.run("grep '^group:.*ldap' /etc/nsswitch.conf")
+    assert result.returncode == 0
+
+def test_nss_shadow():
+    result = subprocess.run("grep '^shadow:.*files.*ldap' /etc/nsswitch.conf")
+    assert result.returncode == 0
+
+
+
+
+#server_ldap_test.py
+import subprocess
+
+
+def slapd_is_active():
+    result = subprocess.run("systemctl is-active slapd.service | grep active", shell=True, text=True)
+    assert result.returncode == 0
+
+def slapd_is_enabled():
+    result = subprocess.run("systemctl is-enabled slapd.service | grep enabled", shell=True, text=True)
+    assert result.returncode == 0
+
+def test_slapd():
+    slapd_is_active()
+    slapd_is_enabled()
+
+
+def test_port389():
+    result = subprocess.run("grep 'tcp.*389' /etc/nftables.conf | grep '#'", shell=True, text=True)
+    assert result.returncode == 1
+
+def test_ldapsearch():
+    result = subprocess.run("ldapsearch -x | grep hugo.william.com", shell=True, text=True)
+    assert result.returncode == 0
+
+
+
+#NSSWITCH
+
+def test_nss_passwd():
+    result = subprocess.run("grep '^passwd:.*ldap' /etc/nsswitch.conf")
+    assert result.returncode == 0
+
+def test_nss_group():
+    result = subprocess.run("grep '^group:.*ldap' /etc/nsswitch.conf")
+    assert result.returncode == 0
+
+def test_nss_shadow():
+    result = subprocess.run("grep '^shadow:.*files.*ldap' /etc/nsswitch.conf")
+    assert result.returncode == 0
+
+def test_user_existance():
+    result = subprocess.run("getent passwd will | grep will", shell=True, text=True)
+    assert result.returncode == 0

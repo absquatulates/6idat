@@ -1,0 +1,38 @@
+-- Föreläsning 6 --
+-- Rekursion --
+
+with Ada.Text_IO;                         use Ada.Text_IO;
+with Ada.Integer_Text_IO;                 use Ada.Integer_Text_IO; 
+with Ada.Float_Text_IO;                   use Ada.Float_Text_IO;
+
+
+
+procedure Fo6 is
+   
+ --  function Fac2 (N: in )
+--		 return Willaim is
+   
+   
+   function Factorial (N: in Natural)
+		      return Positive is
+      
+   begin
+      
+      if N = 0 then
+	 return 1;
+      else
+	return N * Factorial(N-1);
+      end if;
+      
+   end Factorial;
+   
+   
+   N: Natural;
+   
+begin
+   
+   Get(N);
+   Put(Factorial(N));
+   
+end Fo6;
+

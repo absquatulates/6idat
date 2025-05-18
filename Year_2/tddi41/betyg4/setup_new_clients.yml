@@ -1,0 +1,151 @@
+---
+- name: Setup new clients
+  hosts: extras
+  become: yes
+
+  tasks:
+
+    - name: apt update
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+
+  #DNS
+    - name: Configure DNS
+      copy:
+        src: ~/ansible_setup/dns/client_resolv_conf
+        dest: /etc/resolv.conf  
+
+
+  #LDAP
+    - name: Install LDAP
+      apt:
+        name: 
+          - libnss-ldapd 
+          - libpam-ldapd 
+          - ldap-utils
+
+    - name: Configure LDAP ldap.conf  
+      copy:
+        src: ~/ansible_setup/ldap/client_ldap_conf
+        dest: /etc/ldap/ldap.conf
+
+    - name: Configure LDAP nslcd.conf
+      copy:
+        src: ~/ansible_setup/ldap/client_nslcd_conf
+        dest: /etc/nslcd.conf
+
+    - name: Configure nsswitch.conf #LDAP och NSF
+      copy:
+        src: ~/ansible_setup/client_nsswitch_conf
+        dest: /etc/nsswitch.conf
+
+    - name: Configure pam.d
+      copy:
+        src: ~/ansible_setup/ldap/client_pam_d_common_session
+        dest: /etc/pam.d/common-session
+
+
+  #NTP
+    - name: Install NTP
+      apt:
+        name: ntp
+
+    - name: Configure NTP
+      copy:
+        src: ~/ansible_setup/ntp/client_ntp_conf
+        dest: /etc/ntp.conf
+
+    - name: Restart NTP
+      ansible.builtin.shell: systemctl restart ntp
+
+
+  #NFS
+    - name: Install autofs
+      apt:
+        name: autofs
+
+    - name: Configure autofs
+      copy:
+        src: ~/ansible_setup/nfs/client_default_autofs
+        dest: /etc/default/autofs
+
+    - name: Install autofs-ldap
+      apt:
+        name: autofs-ldap
+
+    - name: Restart autofs
+      ansible.builtin.shell: systemctl restart autofs
+
+    - name: Configure fstab
+      copy:
+        src: ~/ansible_setup/nfs/client_fstab
+        dest: /etc/fstab
+
+
+  #Copy tests
+    - name: Make test folder
+      ansible.builtin.file:
+        path: /root/tests
+        state: directory
+
+    - name: Copy DNS test
+      copy:
+        src: ~/ansible_setup/client_tests/client_dns_test.py
+        dest: tests/client_dns_test.py
+
+    - name: Copy LDAP test
+      copy:
+        src: ~/ansible_setup/client_tests/client_ldap_test.py
+        dest: tests/client_ldap_test.py
+
+    - name: Copy NTP test
+      copy:
+        src: ~/ansible_setup/client_tests/client_ntp_test.py
+        dest: tests/client_ntp_test.py
+    
+    - name: Copy NFS test
+      copy:
+        src: ~/ansible_setup/client_tests/client_nfs_test.py
+        dest: tests/client_nfs_test.py
+
+    - name: Copy test script
+      copy:
+        src: ~/ansible_setup/client_tests/run_tests.sh
+        dest: tests/run_tests.sh
+
+    - name: Set test script permission
+      ansible.builtin.file:
+        path: tests/run_tests.sh
+        mode: '0700'
+
+
+  #Configure dpkg
+    - name: Configure dpkg
+      ansible.builtin.command:
+        cmd: dpkg --configure -a
+
+
+  #Install Python3
+    - name: Install python3
+      package:
+        name: python3
+        state: present
+
+
+  #Install pytest
+    - name: Install python3-pip
+      package:
+        name: python3-pip
+        state: present
+
+    - name: Install pytest
+      pip:
+        name: pytest
+        state: present
+
+
+  #Reboot
+    - name: Reboot
+      ansible.builtin.reboot:

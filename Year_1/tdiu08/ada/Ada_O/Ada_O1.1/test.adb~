@@ -1,0 +1,108 @@
+with Ada.Text_IO;            use Ada.Text_IO;
+with Ada.Integer_Text_IO;    use Ada.Integer_Text_IO;
+with Ada.Float_Text_IO;      use Ada.Float_Text_IO;
+  
+procedure Test is 
+   I: Integer;
+   F: Float;
+   C: Character;
+   S: String(1..5);
+		    
+begin
+   -- Test 1 
+   Put("Skriv in ett heltal: ");
+   Get(I);
+   
+   Put("Du skrev in talet: ");
+   Put(I, 2); 
+   New_Line;
+   
+   -- Test 2
+   Put("Skriv in fem heltal: ");
+   Get(I);
+   Put("Du skrev in talen: ");
+   Put(I, 2);
+   Get(I);
+   Put(I, 2);
+   Get(I);
+   Put(I, 2);
+   Get(I);
+   Put(I, 2);
+   Get(I);
+   Put(I, 2); 
+   New_Line;
+   
+   -- Test 3
+   Put("Skriv in ett flyttal: ");
+   Get(F);
+   
+   Put("Du skrev in flyttalet: ");
+   Put(F, Fore=> 2, Aft=>  3, Exp=> 0 ); 
+   New_Line;
+   
+   -- Test 4
+   Put("Skriv in ett heltal och ett flyttal: ");
+   Get(I);
+   Get(F);
+   
+   Put("Du skrev heltalet: "); 
+   Put(I, 2); 
+   New_Line;
+   Put("Du skrev flyttalet: "); 
+   Put(F, 1, 4, 0); 
+   New_Line;
+   
+   -- Test 5
+   Put("Skriv in ett tecken: ");
+   Get(C);
+   
+   Put("Du skrev in tecknet: ");
+   Put(C); 
+   New_Line;
+   
+   -- Test 6
+   Put("Skriv in en sträng med 5 tecken: ");
+   Get(S);
+   
+   Put("Du skrev in strängen: ");
+   Put(S); New_Line;
+   
+   -- Test 7
+   Put("Skriv en sträng med 3 tecken: ");
+   Get(S(1..3));
+   
+   Put("Du skrev in strängen: ");
+   Put(S(1..3)); 
+   New_Line;
+   
+   -- Test 8
+   Put("Skriv in ett heltal och en sträng med 5 tecken: ");
+   Get(I);
+   Get(S(1..1)); 
+   Get(S);
+   
+   Put("Du skrev in talet |"); 
+   Put(I, 1);
+   Put("| och strängen |"); 
+   Put(S); 
+   Put("|."); 
+   New_Line;
+   
+   -- Test 9
+   Put("Skriv in en sträng med 3 tecken och ett flyttal: ");
+   Get(S(1..3)); 
+   Get(F);
+   
+   Put("Du skrev in "); 
+   Put('"'); 
+   Put(F, 1, 3, 0); 
+   Put('"'); 
+   Put(" och "); 
+   Put('"'); 
+   Put(S(1..3)); 
+   Put('"'); 
+   Put(".");
+   New_Line;
+   
+end Test;
+

@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+
+class Bacteria_colony
+{
+public:
+    Bacteria_colony(int bacteria, double consumption)
+        : bacteria{bacteria}, consumption{consumption}
+    {}
+    virtual ~Bacteria_colony() = default;
+    
+    virtual void update(double & nutrients)
+    {
+        
+    }
+    void print()
+    {
+        
+    }
+
+protected:
+    int bacteria{};
+    double consumption{};
+    
+};
+
+class Ecoli : public Bacteria_colony
+{
+public:
+    Ecoli(double growthfactor, double growthRate)
+        : Bacteria_colony(), growthFactor{growthFactor}, growthRate{growthRate} 
+    {}
+    void update(double & nutrients) override
+    {
+        
+    }
+    
+
+private:
+    double growthFactor{2.0};
+    double growthRate{1.5};
+};
+
+class Saureus : public Bacteria_colony
+{
+public:
+        using Bacteria_colony::Bacteria_colony;
+    
+};
+
+
+class Petri_Dish
+{
+    Petri_Dish();
+};
+    
+
+int main()
+{
+  std::vector<Bacteria_colony> colonies { Ecoli{1, 1.0, 2.0, 1.5},
+                                         Saureus{1, 2.0} };
+    
+    Petri_Dish dish{colonies, 600};
+
+    dish.print(std::cout);
+
+    std::cout << "Simulating 5 time steps..." << std::endl;
+    for(int i{}; i < 5; ++i)
+    {
+        dish.simulate();
+    }
+
+    dish.print(std::cout);
+}

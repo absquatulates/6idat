@@ -1,0 +1,23 @@
+-- Date_Type_Pack.ads --
+-- hugho678: Samarbetat med carbj841, Carl Björlin, samma program
+
+package Date_Handling is
+   
+   type Date_Type is private;
+   
+   procedure Get (Date: out Date_Type);
+   procedure Put (Date: in Date_Type);
+   procedure Get_Correct_String (S: out String);
+   
+   Length_Error, Format_Error, Year_Error, Month_Error, Day_Error: exception;
+   
+private
+   
+      type Date_Type is
+      record
+	 Year:  Integer;
+	 Month: Integer;
+	 Day:   Integer;
+      end record;
+   
+end Date_Handling;

@@ -1,0 +1,19 @@
+-- TDIU08 Föreläsning 4 --
+-- Kasta undantag, Paket --
+
+with Ada.Text_IO;              use Ada.Text_IO;
+with Ada.Integer_Text_IO;      use Ada.Text_Integer_IO;
+
+
+procedure Fö4 is
+   
+   
+   
+   
+begin
+   
+   
+   
+   
+   
+end Fö4;   

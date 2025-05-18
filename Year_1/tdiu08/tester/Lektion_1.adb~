@@ -1,0 +1,27 @@
+with Ada.Text_IO;          use Ada.Text_IO;
+with Ada.Integer_Text_IO;  use Ada.Integer_Text_IO;
+
+procedure Lektion_1 is
+   
+   A, B, C, D, E, Summa : Integer;
+   
+begin
+   
+   Put("Skriv fem heltal: ");
+   
+   Get(A);
+   Get(B);
+   Get(C);
+   Get(D);
+   Get(E);
+   
+   Summa := A+B+C+D+E;
+   
+   Put("Summan: ");
+   Put_Line(Summa, 1);
+   
+   
+   
+   
+   
+end Lektion_1;

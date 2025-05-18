@@ -1,0 +1,29 @@
+LAB 3
+
+1.
+Hur installerar man ett paket?
+	apt-get install <paket>
+Hur avinstallerar man ett paket?
+	apt-get remove <paket>
+Hur avinstallerar man verkligen ett paket?
+	apt-get purge <paket>
+Hur får man de senaste uppdateringarna till sitt system?
+	apt-get update
+
+Hur ser man vilka filer som ett paket tillhandahåller?
+	dkpg -L <paket>
+Hur ser man vilket paket som tillhandahåller en fil?
+	dkpg -S <fil>
+
+2.
+apt-get install cowsay (i VM:et)
+cd /usr/games
+./cowsay moo
+(han sa moo)
+apt-get remove cowsay
+
+3.
+Hur lägger man till ett nytt repo?
+	add-apt-repository <repo>	
+Hur tar man bort ett repo?
+	add-apt-repository -r <repo>

@@ -1,0 +1,28 @@
+-- Date_Handling.ads --
+-- hugho678: Samarbetat med carbj841, Carl Björlin, samma program
+-- hugho678: Samarbetat med oskby691, Oskar Bylund, samma program
+
+package Date_Handling is
+   
+   type Date_Type is private;
+   
+   procedure Get (Date: out Date_Type);
+   procedure Put (Date: in Date_Type);
+   function Next_Date (Date: in Date_Type) return Date_Type;
+   function Previous_Date (Date: in Date_Type) return Date_Type;
+   function ">" (Date_1, Date_2: in Date_Type) return Boolean;
+   function "<" (Date_1, Date_2: in Date_Type) return Boolean;
+   function "=" (Date_1, Date_2: in Date_Type) return Boolean;
+   
+   Length_Error, Format_Error, Year_Error, Month_Error, Day_Error: exception;
+   
+private
+   
+      type Date_Type is
+      record
+	 Year:  Integer;
+	 Month: Integer;
+	 Day:   Integer;
+      end record;
+   
+end Date_Handling;

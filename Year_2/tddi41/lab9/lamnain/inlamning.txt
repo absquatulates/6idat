@@ -1,0 +1,290 @@
+3.1
+Vad är syftet med /etc/fstab?
+
+    Att deklarera vilka, vart och hur diskar ska monteras vid uppstart av maskinen
+
+
+Vad används kommandot mke2fs (mkfs.ext{2..4}) till?
+
+    Att formatera en disk till typen ext2, ext3 eller ext4
+
+
+Vad skriver kommandot df -h ut?
+
+    Skriver ut maskinens filsystem i läsbart format
+
+
+Förklara vad kommandot mount -t ext3 /dev/sdb2 /mnt/media innebär
+
+    Det innebär att man monterar en formaterad disk, /dev/sbd2, av typen ext3 som ligger i vid /mnd/media
+
+
+
+
+3.2
+Vad står förkortningen RAID för?
+
+    Redundant array of independent disks
+
+
+Förklara i grova drag hur RAID-0 fungerar
+
+    Sprider ut datan mellan alla diskar i arrayen, detta innebär att arrayen syns som en disk med alla diskars gemensamma utrymme.
+    Det innebär också att om en disk slutar fungera finns risk att all data går förlorad.
+
+
+Förklara i grova drag hur RAID-1 fungerar
+
+    Speglar datan i diskarna, detta innebär att all data på ena disken finns också på den andra disken och arrayen syns som en disk med utrymmet av den ena,
+    Det innebär också att om en disk slutar fungera finns all data kvar på den andra och inget går förlorat
+
+
+Vad innebär kommandot mdadm --stop /dev/md0 ?
+
+    avmonterar och stänger ner raid-arrayen /dev/md0
+
+
+
+
+3.3
+Förklara följande begrepp: fysisk volym (PV: Physical Volume), volymgrupp (VG: Volume Group) och logisk volym (LV: Logical Volume) och hur de hänger ihop
+
+    PV - fysiks volym är oftast den fysiska disken eller en partition av en disk
+    VG - volymgrupp är grupp av fysiska volymer
+    LV - logisk volym är den volymen som operativsystemet använder för att lagra datan
+
+    Dessa hänger ihop på följande vis:
+    Fysiska volymen är det faktiska utrymmet.
+    Volymgrupper är en grupp av fysiska volymer.
+    Logiska volymer är delar av volymgrupper som syns i operativsystemet och
+    där data lagras. 
+
+
+Vad är kommandot för att göra klart en fysisk volym för lvm?
+
+    pvcreate <disk>
+
+
+Vad är kommandot för att skapa en volymgrupp?
+
+    vgcreate <volymgrupp> <fysisk volym>
+
+
+Vad är kommandot för att utöka en volymgrupp med ytterligare en PV?
+
+    vgextend <volymgrupp> <fysisk volym>
+
+
+Hur skapar du en logisk volym på 100MB från en volymgrupp?
+
+    lvcreate -n <logiskvolymnamn> -L 100m <volymgrupp>
+
+
+
+
+3.5
+Vad är en automount map?
+
+    Verktyg för hantering av automatiska monteringar 
+
+
+Vilket paket behöver du installera för att använda automount?
+
+    autofs
+
+
+Vad är det för skillnad på direkta och indirekta automount maps?
+
+    - Direkta automount maps specifierar exakta mountpoints.
+    - Indirekta skapar gemensam rotkatalog där alla monteras som undermappar.
+
+
+Vad heter huvudkonfigurations-filen för automount? (Detta är inte samma sak som auto.master)
+
+    /etc/default/autofs
+
+
+#--------------------------------------------------------------------------------------------------#
+
+TILLÄGAGÅNG
+
+3.2
+Följde stegen i övningen, med kommandot "lsblk" kunde vi se att: 
+- vda och vdb tillhörde md0 och var av typen raid 1
+- vdc och vdd tillhörde md1 och var av typen raid 0
+
+    root@server:~# lsblk
+    NAME              MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+    fd0                 2:0    1    4K  0 disk  
+    sda                 8:0    0   25G  0 disk  
+    |-sda1              8:1    0   24G  0 part  /
+    |-sda2              8:2    0    1K  0 part  
+    `-sda5              8:5    0  975M  0 part  [SWAP]
+    sr0                11:0    1 1024M  0 rom   
+    vda               254:0    0    1G  0 disk  
+    `-md0               9:126  0 1022M  0 raid1
+    vdb               254:16   0    1G  0 disk  
+    `-md0               9:126  0 1022M  0 raid1
+    vdc               254:32   0    1G  0 disk  
+    `-md1               9:127  0    2G  0 raid0 
+    vdd               254:48   0    1G  0 disk  
+    `-md1               9:127  0    2G  0 raid0 
+    vde               254:64   0    1G  0 disk  
+    vdf               254:80   0    1G  0 disk  
+    vdg               254:96   0    1G  0 disk  
+    vdh               254:112  0    1G  0 disk  
+
+
+
+3.3
+Följde stegen i övningen, med kommandot "lsblk" kunde vi se att
+de två volymerna lvvol1 och lvvol2 låg under md0 i vda och vdb
+om hade storleken 100M (precis den storleken vi valde)
+
+Definierade i /etc/fstab att lvvol1 monteras under /home1 och
+lvvol2 monteras under /home2. Startade om systemet verifirade med 
+"df -h" och "lsblk" att de monterades rätt.
+
+root@server:~# lsblk
+NAME              MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+fd0                 2:0    1    4K  0 disk  
+sda                 8:0    0   25G  0 disk  
+|-sda1              8:1    0   24G  0 part  /
+|-sda2              8:2    0    1K  0 part  
+`-sda5              8:5    0  975M  0 part  [SWAP]
+sr0                11:0    1 1024M  0 rom   
+vda               254:0    0    1G  0 disk  
+`-md0               9:126  0 1022M  0 raid1 
+  |-vgvirt-lvvol1 252:0    0  100M  0 lvm   /home1
+  `-vgvirt-lvvol2 252:1    0  100M  0 lvm   /home2
+vdb               254:16   0    1G  0 disk  
+`-md0               9:126  0 1022M  0 raid1 
+  |-vgvirt-lvvol1 252:0    0  100M  0 lvm   /home1
+  `-vgvirt-lvvol2 252:1    0  100M  0 lvm   /home2
+vdc               254:32   0    1G  0 disk  
+`-md1               9:127  0    2G  0 raid0 
+vdd               254:48   0    1G  0 disk  
+`-md1               9:127  0    2G  0 raid0 
+vde               254:64   0    1G  0 disk  
+vdf               254:80   0    1G  0 disk  
+vdg               254:96   0    1G  0 disk  
+vdh               254:112  0    1G  0 disk  
+
+root@server:~# df -h
+Filesystem                 Size  Used Avail Use% Mounted on
+udev                       470M     0  470M   0% /dev
+tmpfs                       98M  596K   98M   1% /run
+/dev/sda1                   24G  2.1G   21G  10% /
+tmpfs                      489M     0  489M   0% /dev/shm
+tmpfs                      5.0M     0  5.0M   0% /run/lock
+/dev/mapper/vgvirt-lvvol1   92M   48K   85M   1% /home1
+/dev/mapper/vgvirt-lvvol2   92M   25K   85M   1% /home2
+tmpfs                       98M     0   98M   0% /run/user/0
+
+
+
+3.5
+Skapade två användare, user1 och user2, flyttade sedan deras hemkatalog med "mv" men insåg
+sedan att detta inte gjorde det vi vill så vi använde istället "usermod -d /home1/user1 user1"
+och sedan i skriptet lade vi till att den lägger användaren i den specifierade hemkatalogen redan 
+när den skapas med "useradd -d /home1/user1 -m -s /bin/bash user1".
+
+Lade till följande rader i /etc/exports i servern:
+
+    /home1 10.0.0.3(rw,sync,root_squash)
+    /home2 10.0.0.3(rw,sync,root_squash)
+    /home2 10.0.0.4(rw,sync,root_squash)
+    /home1 10.0.0.4(rw,sync,root_squash)
+
+detta för att servern ska exportera /home1 och /home2 till klienterna.
+
+Installerade autofs på servern och klienterna
+
+Följde den länkade guiden för att montera användarnas hemkataloger vid inloggning
+Sparade följande schema som /etc/ldap/schema/autofs-ldap.ldif
+
+    dn: cn=autofs,cn=schema,cn=config
+    objectClass: olcSchemaConfig
+    cn: autofs
+    olcAttributeTypes: {0}( 1.3.6.1.1.1.1.25 NAME 'automountInformation' DESC 'Inf
+    ormation used by the autofs automounter' EQUALITY caseExactIA5Match SYNTAX 1.
+    3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE )
+    olcObjectClasses: {0}( 1.3.6.1.1.1.1.13 NAME 'automount' DESC 'An entry in an 
+    automounter map' SUP top STRUCTURAL MUST ( cn $ automountInformation $ object
+    class ) MAY description )
+    olcObjectClasses: {1}( 1.3.6.1.4.1.2312.4.2.2 NAME 'automountMap' DESC 'An gro
+    up of related automount objects' SUP top STRUCTURAL MUST ou )
+
+Lade till det i LDAP med
+
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/autofs-ldap.ldif
+
+Lade sedan till följande records i ldap:
+
+    dn: ou=admin,dc=hugo,dc=william,dc=com
+    ou: admin
+    objectClass: top
+    objectClass: organizationalUnit
+
+    dn: ou=automount,ou=admin,dc=hugo,dc=william,dc=com
+    ou: automount
+    objectClass: top
+    objectClass: organizationalUnit
+
+    dn: ou=auto.master,ou=automount,ou=admin,dc=hugo,dc=william,dc=com
+    ou: auto.master
+    objectClass: top
+    objectClass: automountMap
+    
+    dn: cn=/home,ou=auto.master,ou=automount,ou=admin,dc=hugo,dc=william,dc=com
+    cn: /home
+    objectClass: top
+    objectClass: automount
+    automountInformation: ldap:ou=auto.home,ou=automount,ou=admin,dc=hugo,dc=william,dc=com --timeout=60 --ghost
+
+    dn: ou=auto.home,ou=automount,ou=admin,dc=hugo,dc=william,dc=com
+    ou: auto.home
+    objectClass: top
+    objectClass: automountMap
+
+Lade sedan till en automount-record för vardera av de två användare vi skapat tidigare
+
+    dn: cn=user1,ou=auto.home,ou=automount,ou=admin,dc=hugo,dc=william,dc=com
+    cn: user1
+    objectClass: top
+    objectClass: automount
+    automountInformation: -fstype=nfs4,rw 10.0.0.2:/home1/user1
+
+    dn: cn=user2,ou=auto.home,ou=automount,ou=admin,dc=hugo,dc=william,dc=com
+    cn: user2
+    objectClass: top
+    objectClass: automount
+    automountInformation: -fstype=nfs4,rw 10.0.0.2:/home2/user2
+
+
+Lade till att /etc/auto.home innehöll 
+    *ldap:ou=auto.home,ou=automount,ou=admin,dc=hugo,dc=william,dc=com
+
+och /etc/auto.master innehöll
+    +auto.master
+
+
+Gjorde följande konfiguration i /etc/default/autofs i klienterna
+
+    MASTER_MAP_NAME="ou=auto.master,ou=automount,ou=admin,dc=hugo,dc=william,dc=com"
+    LDAP_URI="ldap://10.0.0.2"
+    SEARCH_BASE="ou=automount,ou=admin,dc=hugo,dc=william,dc=com"
+    LOGGING="verbose"
+
+    MAP_OBJECT_CLASS="automountMap"
+    ENTRY_OBJECT_CLASS="automount"
+    MAP_ATTRIBUTE="ou"
+    ENTRY_ATTRIBUTE="cn"
+    VALUE_ATTRIBUTE="automountInformation"
+
+
+Märkde att det inte fungerade för att vi saknade filen
+    /lib/x86_64-linux-gnu/autofs/lookup_ldap.so
+detta löste sig genom att vi laddade ner paketet autofs-ldap som innehöll den filen
+
+Det fungerade sedan att logga in som användarna och katalogerna monterades korrekt!

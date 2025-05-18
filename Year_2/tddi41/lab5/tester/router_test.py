@@ -1,0 +1,84 @@
+import subprocess
+
+def hostname():
+    result = subprocess.run("hostname | grep gw", capture_output=True, shell=True, text=True)
+    assert result.returncode == 0
+
+def ip():
+    result = subprocess.run("cat /etc/network/interfaces | grep \"address 10.0.0.*/24\"", capture_output=True, shell=True, text=True)
+    assert result.returncode == 0
+
+def ping_10022():
+    result = subprocess.run("ping -i 0.05 -c 4 10.0.2.2", shell=True, text=True)
+    assert result.returncode == 0
+
+def ip_forward():
+    result = subprocess.run("cat /proc/sys/net/ipv4/ip_forward | grep 1", capture_output=True, shell=True, text=True)
+    assert result.returncode == 0
+
+def ip_masquerade():
+    result = subprocess.run("nft list ruleset | grep masquerade", capture_output=True, shell=True, text=True)
+    assert result.returncode == 0
+
+def ping_google():
+    result = subprocess.run("ping -i 0.05 -c 4 8.8.8.8", shell=True, text=True)
+    assert result.returncode == 0
+
+def ping_server():
+    result = subprocess.run("ping -i 0.05 -c 4 server", shell=True, text=True)
+    assert result.returncode == 0
+
+def ping_client1():
+    result = subprocess.run("ping -i 0.05 -c 4 client-1", shell=True, text=True)
+    assert result.returncode == 0
+
+def ping_client2():
+    result = subprocess.run("ping -i 0.05 -c 4 client-2", shell=True, text=True)
+    assert result.returncode == 0
+
+def is_active():
+    result = subprocess.run("systemctl is-active nftables.service | grep active", shell=True, text=True)
+    assert result.returncode == 0
+
+def active_on_boot():
+    result = subprocess.run("systemctl is-enabled nftables.service | grep enabled", shell=True, text=True)
+    assert result.returncode == 0
+
+def port22():
+    result = subprocess.run("nc -zv gw 22", shell=True, text=True)
+    assert result.returncode == 0
+    
+def port80():
+    result = subprocess.run("nc -zv gw 80", shell=True, text=True)
+    assert result.returncode == 1
+
+def firewall():
+    is_active()
+    active_on_boot()
+    port22()
+    port80()
+    
+
+
+def test_gw():
+    hostname()
+    ip()
+    ip_forward()
+    ip_masquerade()
+
+    ping_10022()
+    ping_google()
+    ping_server()
+    ping_client1()
+    ping_client2()
+
+    firewall()
+
+
+
+
+
+
+
+
+

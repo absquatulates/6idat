@@ -1,0 +1,20 @@
+Proxy
+
+1. Set your browsers HTTP proxy to use 
+    IP: 127.0.0.1
+    Port: 1337
+
+2. Run proxy.py in your terminal
+    python3 proxy.py
+
+3. Load an HTTP website, if the website contains the words 
+   "Stockholm" and/or "smiley" they will be changed.
+
+
+Notes:
+Most of the testing was done on campus with private computer
+it works fine there but we ran in to some problems on some of
+the campus computers due to firewall issues.
+
+
+student ID: viles222 hugho678

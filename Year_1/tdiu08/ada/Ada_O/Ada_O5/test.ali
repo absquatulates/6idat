@@ -1,0 +1,79 @@
+V "GNAT Lib v10"
+M P W=b
+P ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_IO
+RV SPARK_05
+
+U test%b		test.adb		55c4a7b6 NE OO SU
+W ada%s			ada.ads			ada.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W date_handling%s	date_handling.adb	date_handling.ali
+
+D ada.ads		20230707070819 76789da1 ada%s
+D a-except.ads		20230707070819 a7106115 ada.exceptions%s
+D a-inteio.ads		20230707070819 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20230707070819 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20230707070819 119b8fb3 ada.streams%s
+D a-tags.ads		20230707070819 491b781d ada.tags%s
+D a-textio.ads		20230707070819 aef4d56d ada.text_io%s
+D a-tiinio.ads		20230707070819 390edddb ada.text_io.integer_io%s
+D a-unccon.ads		20230707070819 0e9b276f ada.unchecked_conversion%s
+D date_handling.ads	20231120174157 d612b662 date_handling%s
+D interfac.ads		20230707070819 5ab55268 interfaces%s
+D i-cstrea.ads		20230707070819 e53d8b8e interfaces.c_streams%s
+D system.ads		20230707070819 4635ec04 system%s
+D s-crtl.ads		20230707070819 0ebbdb71 system.crtl%s
+D s-exctab.ads		20230707070819 54135002 system.exception_table%s
+D s-ficobl.ads		20230707070819 078245e4 system.file_control_block%s
+D s-parame.ads		20230707070819 48ec542b system.parameters%s
+D s-secsta.ads		20230707070819 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20230707070819 a7318a92 system.soft_links%s
+D s-stache.ads		20230707070819 a37c21ec system.stack_checking%s
+D s-stalib.ads		20230707070819 09bd3940 system.standard_library%s
+D s-stoele.ads		20230707070819 2dc34a04 system.storage_elements%s
+D s-traent.ads		20230707070819 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20230707070819 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20230707070819 1b7d22d2 system.wch_con%s
+D test.adb		20231116151357 db694d1d test%b
+G a e
+G c Z b b [test standard 9 11 none]
+G r c none [test standard 9 11 none] [get date_handling 9 14 none]
+G r c none [test standard 9 11 none] [put date_handling 10 14 none]
+G r c none [test standard 9 11 none] [next_date date_handling 11 13 none]
+G r c none [test standard 9 11 none] [previous_date date_handling 12 13 none]
+G r c none [test standard 9 11 none] [Ogt date_handling 13 13 none]
+G r c none [test standard 9 11 none] [Olt date_handling 14 13 none]
+G r c none [test standard 9 11 none] [Oeq date_handling 15 13 none]
+X 1 ada.ads
+16K9*Ada 20e8 26|5r6 5r31 6r6 6r31
+X 3 a-inteio.ads
+18K13*Integer_Text_IO[8|46] 26|6w10 6r35
+X 7 a-textio.ads
+57K13*Text_IO 727e16 26|5w10 5r35
+264U14*New_Line 26|19s4 23s4 27s4
+465U14*Put 26|14s4 17s4 21s4 25s4 29s4 32s4 39s4 46s4 55s7 57s7 59s7 61s7
+508U14*Put_Line 26|34s7 36s7 41s7 43s7 48s7 50s7
+X 10 date_handling.ads
+5K9*Date_Handling 28e18 26|7w6 7r31
+7R9*Date_Type 26e17 26|11r20
+9U14*Get 26|15s4 30s4
+10U14*Put 26|18s4 22s4 26s4
+11V13*Next_Date{7R9} 26|22s8
+12V13*Previous_Date{7R9} 26|26s8
+13V14*">"{boolean} 26|33s14
+14V14*"<"{boolean} 26|40s14
+15V14*"="{boolean} 26|47s14
+17X18*Format_Error 26|54r9
+17X32*Year_Error 26|56r9
+17X44*Month_Error 26|58r9
+17X57*Day_Error 26|60r9
+X 26 test.adb
+9U11*Test 9b11 62l5 62t9
+11r4 Date_1{10|7R9} 15m8 18r8 22r18 26r22 33r7 40r7 47r7
+11r12 Date_2{10|7R9} 30m8 33r16 40r16 47r16
+

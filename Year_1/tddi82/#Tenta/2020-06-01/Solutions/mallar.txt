@@ -1,0 +1,134 @@
+1. Vad finns det för fördel med att låta en annan klass bestämma hur
+   Accumulator ska slå ihop alla värden?
+
+Detta tillåter användaren av Accumulator att anpassa beteendet av
+summeringen utan att behöva ändra på Accumulator klassen. Som vi ser i
+VG-delen så tillåter det oss att ha två olika modeller för summering,
+en som summerar objektet enligt operator+ (Sum_Handler) och en som
+förvandlar objekten till strängar och sedan slår ihop dessa strängar
+istället (String_Handler).
+
+Man kan även föreställa sig andra Handlers, t.ex. att multiplicerar
+talen istället:
+
+template <typename T>
+class Mult_Handler : public Sum_Handler<T>
+{
+public:
+
+    Mult_Handler(T start = {})
+        : start{start}
+    { }
+    
+    T combine(T const& result, T const& value) const
+    {
+        return result * value;
+    }
+};
+
+Detta gör att Accumulator blir mycket mer generell än om Sum_Handler
+logiken hade vart hårdkodad i Accumulator. Vi kan även notera att om
+vi sätter Sum_Handler som default till Handler parametern i
+Accumulator så följer vi även standardbibliotekets filosofi,
+d.v.s. att det vanligaste fallet är det lättaste. I detta fall anser
+vi att addition är vanligare än multiplikation.
+
+En annan anledning är att nu kan vi även återanvända Sum_Handler och
+String_Handler till andra saker.
+
+======================================================================
+
+2. Varför sparas handler som en datamedlem i Accumulator?
+
+Sum_Handler sparar vilket värde som summan ska starta på (vilket också
+är värdet som returneras om behållaren är tom). Denna information
+måste finnas tillgänglig varje gång vi anropar evaluate, och den får
+inte ändras mellan anropen till evaluate. Därför måste den
+informationen finnas tillgänglig under hela Accumulator objektets
+livslängd. Det bästa sättet att se till att det sker är att spara
+handler (som i sin tur sparar start-värdet) som en datamedlem.
+
+Så varför sparar vi då inte bara start direkt i Accumulator?
+
+Det har att göra med svaret på fråga 1. Vi vill att Accumulator och
+Handler ska vara frånkopplade och därför ska Handler bestämma hur
+summering hanteras.
+
+Om vi t.ex. vill endast summera vartannat tal med Accumulator då måste vi göra något i stil med:
+
+template <typename T>
+class Every_Other_Handler : public Sum_Handler<T>
+{
+public:
+
+    Every_Other_Handler(T start = {})
+        : start{start}, ignore{false}
+    { }
+    
+    T combine(T const& result, T const& value) const
+    {        
+        if (ignore) // detta tal ska ignoreras i summan
+        {
+            // nästa tal ska inte ignoreras
+            ignore = false;
+            return {};
+        }
+        else // detta tal ska INTE ignoreras
+        {
+            // nästa tal ska ignoreras
+            ignore = true;
+            return result + value;
+        }
+    }
+private:
+    bool ignore{false};
+   
+};
+
+För att detta ska funka måste alltså ignore värdet bibehållas mellan
+varje anrop till combine och för att denna sekvens ska kunna
+bibehållas mellan olika anrop till Accumulator måste denna variabel
+även finnas sparad där. Men vi kan ju inte förutspå vilka variabler
+som Handler kommer behöva, därför låter vi istället den själv hålla
+koll på vad den behöver.
+
+======================================================================
+
+3. Hur skiljer sig filuppdelning (.h och .cc filer) när man jobbar med
+   klassmallar jämfört med vanliga klasser?
+
+När vi instansierar en klassmall måste kompilatorn vid exakt det
+tillfället känna till allt om klassmallen, för annars vet den inte hur
+den ska skapa klassen.
+
+Detta har effekten att vi kan inte "vänta" med kompileringen av
+klassmallens definition tills kompilatorn kommer till cc-filen som
+innehåller definitionen av klassmallen (vilket den kan göra med
+vanliga klasser).
+
+Därför måste deklarationen OCH definitionen av vår klassmall finnas
+tillgänglig redan i h-filen.
+
+Ett sätt vi fortfarande kan få filuppdelning på är att skapa en så
+kallad tcc-fil där vi lägger defintionen av vår klassmall och sedan
+inkludera denna i slutet av h-filen. Men detta är inte ett krav.
+
+En annan skillnad är att när vi definierar en medlemsfunktion i en
+klassmall så måste vi berätta för kompilatorn att det kommer från en
+klassmall genom att göra en template deklaration innan
+definitionen. T.ex.:
+
+template <typename T>
+class My_Class
+{
+public:
+    void my_fun();
+};
+
+// Även fast my_fun inte är en funktionsmall så måste vi fortfarande
+// berätta för kompilatorn att den kommer från en klassmall.
+template <typename T>
+void My_Class<T>::my_fun()
+{
+
+}

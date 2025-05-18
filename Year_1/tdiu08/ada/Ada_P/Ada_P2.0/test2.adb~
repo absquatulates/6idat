@@ -1,0 +1,43 @@
+-- Ada_P2.0 --
+
+with Ada.Text_IO;                         use Ada.Text_IO;
+with Ada.Integer_Text_IO;                 use Ada.Integer_Text_IO; 
+with Ada.Float_Text_IO;                   use Ada.Float_Text_IO; 
+
+
+procedure Test2 is
+   
+   
+   -- Deluppgift_1 --
+   
+   function Deluppgift_1 (R: in Float) return Integer is
+      
+      Area: Integer;
+      
+   begin
+      
+      Area := Integer(Float'Rounding(Float(R) * Float(R) * 3.14));
+
+      
+      return Area;
+      
+   end Deluppgift_1;
+   
+   
+   
+   
+   -- Huvudprogram --
+   
+   R: Float;
+   
+begin
+   
+   -- Deluppgift_1 --
+   
+   Put("Mata in längden: ");
+   Get(R);
+   
+   Put("Den beräknade arean blev: ");
+   Put(Deluppgift_1(R), 0);
+   
+end Test2;

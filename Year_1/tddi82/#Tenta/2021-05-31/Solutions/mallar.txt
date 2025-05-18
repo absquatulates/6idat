@@ -1,0 +1,138 @@
+Notera att svaren i detta facit är inte representativa av hur svaren
+ser ut under tentan, utan det innehåller ett antal olika argument som
+kan svara på frågan. Under tentan räcker det med ett eller två
+argument. Det viktiga är att svaren är *tydliga*. Tänk på at det är
+ditt ansvar att visa på din förståelse, lämna därför inga viktiga
+detaljer osagda.
+
+======================================================================
+
+1. Varför måste vi ta emot Remove_And_Increase som en parameter till
+Map_Filter? Förklara.
+
+Denna fråga går att tolka på två olika sätt:
+
+a) Varför måste vi ta emot en mallparameter för Remove_And_Increase?
+
+Om vi inte tar emot Remove_And_Increase som en mallparameter så kommer
+vi inte kunna byta ut beteendet i Map_Filter. Poängen med att separera
+ut logiken är för att tillåta användaren anpassa funktionaliteten,
+precis som STL algoritmer gör med lambda funktioner. Men i detta fall
+anpassas beteendet genom att byta ut 'policy' klassen.
+
+Eftersom att beteendet anpassas genom att skriva en egen klass som
+sedan lämnas över till Map_Filter så måste Map_Filter känna till denna
+klass, men det enda sättet det kan hända på är om användaren lämnar
+över typen (Remove_And_Increase i detta fall) som en
+mallparameter. Det går också att lösa med arv och virtuella
+funktioner, men detta har fler nackdelar:
+
+I)   Det introducerar extra steg för användaren (användaren måste nu
+     veta att den ska ärva från en viss klass och den måste överlagra
+     funktionerna på rätt sätt)
+     
+II)  Det gör gränssnittet för Map_Filter krångligare eftersom att nu
+     måste användaren antingen lämna över minnet av policy-klassen
+     till Map_Filter eller hålla koll på minnet för den själv.
+
+III) Polymorfiska kostar mer under körtiden av programmet jämfört med
+     vanliga klasser som skickas som mallparametrar.
+
+b) Varför måste vi ta emot Remove_And_Increase som en parameter till
+konstruktorn?
+
+Map_Filter innehåller en instans av Remove_And_Increase och denna
+instans måste instansieras på något sätt. Remove_And_Increase måste ha
+tillstånd (minne) för att vi ska kunna använda den ordentligt. I detta
+fall måste vi hålla reda på de värden vi vill ta bort (datamedlemmen
+'target'). Detta betyder att vi måste spara undan detta tillstånd
+någonstan och därför lagrar vi det i policy-klassen och sedan håller
+Map_Filter koll på en instans av Remove_And_Increase.
+
+Men detta svarar inte på varför vi behöver den som parameter till
+konstruktorn, detta svarar endast på varför vi måste ha den som en
+instans. Anledningen till att vi tar emot den som parameter i
+konstruktorn till Map_Filter (istället för att konstruktorn
+instansierar den själv) beror till största del på att användaren av
+Map_Filter klassen måste kunna instansiera tillståndet av
+policy-klassen och därför låter vi användaren instansiera
+Remove_And_Increase så att den kan skickas vidare till Map_Filter.
+
+Det går också att ta emot 'target' värdet direkt som parameter till
+konstruktorn av Map_Filter, men detta begränsar generaliteten för
+andra policy klasser. T.ex. så tar inte Negative_To_Positive emot
+någon data alls i sin konstruktor så vad skulle extraparametern
+'target' ha för syfte i det fallet? Man kan också tänka sig att
+användaren skapar en policy-klass som innehåller fler datamedlemmar än
+just 'target', och då tar alltså Map_Filter emot för få parameterar.
+
+I det fallet är därför den bästa lösningen att användaren får
+instansiera policy-klassen och sedan skicka den till Map_Filter för då
+behöver Map_Filter inte veta *hur* den ska instansieras.
+
+======================================================================
+
+2. Vad ändras om vi ändrar Map_Filter så att den tar emot interatorer
+istället för en behållare? Finns det några för- respektive nackdelar
+med denna ändring?
+
+Map_Filter använder redan iteratorer i sin implementation för att
+hålla reda på vart i databehållaren Map_Filter befinner sig just
+nu. Det är värt att notera att Map_Filter endast har tillgång till
+databehållaren i konstruktorn. Det enda som databehållaren används
+till i konstruktorn är för att plocka fram begin- och end-iteratorerna
+för databehållaren.
+
+Därför är det enda som ändras följande:
+
+a) Vi tar emot iteratorer istället för databehållare som
+   mallparameter. Därmed behöver vi inte längre typaliaset 'iterator'
+   då detta är vår nya mallparameter. Vi behöver dock fortfarande
+   tillgång till värdetypen, d.v.s.:
+
+   using value_type = typename iterator::value_type;
+   
+b) Konstruktorn tar nu emot två iteratorer istället för en referens
+   till en databehållare.
+
+Fördelen med detta jämfört med att ta emot en referens till
+databehållaren är att användaren kan nu själv välja vilket intervall i
+databeållaren som Map_Filter ska agera på. Detta gör att Map_Filter
+blir mer generellt användbar.
+
+En annan fördel är att implementationen av koden blir något lättare
+eftersom att vi inte längre behöver bry oss om vilken databehållare
+som värdena kommer ifrån.
+
+En nackdel med detta är dock att Map_Filter blir något svårare att
+använda eftersom att nu måste vi skicka in två kompatibla iteratorer
+(d.v.s. två iteratorer från samma behållare), vilket leder till en
+källa av fel som inte fanns tidigare.
+
+======================================================================
+
+3. Ser du några fördelar med Map_Filter jämfört med algoritmerna
+std::transform och std::remove_if? Om inte, redovisa minst två
+nackdelar med Map_Filter istället.
+
+Funktionellt sätt så uppfyller Map_Filter samma syfte som
+std::transform + std::remove_if. Men det finns en viktig skillnad,
+nämligen att STL algoritmerna modifierar behållaren.
+
+std::transform behöver lägga alla transformerade värden i en
+databehållare, vilket betyder att alla värden måste beräknas direkt
+när std::transform anropas.
+
+std::remove_if tar bort värden genom att flytta dem till slutet av
+databehållaren. För att faktiskt få bort värden måste användaren
+anropa erase på databehållaren.
+
+Map_Filter lämnar däremot databehållaren intakt. Den kommer inte
+modifiera eller ta bort något av elementen, medan STL algoritmerna gör
+det.
+
+En annan fördel med Map_Filter är att den beräknar värdet direkt när
+användaren ber om ett värde, till skillnad från STL algoritmerna som
+beräknar alla värden direkt. Detta betyder att om t.ex. användaren
+endast bryr sig om de tre första värden efter Map_Filter operationen
+så kommer endast dessa tre värden beräknas.

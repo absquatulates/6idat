@@ -1,0 +1,33 @@
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+	chain input {
+		type filter hook input priority filter;
+	policy drop;
+		
+		iif lo accept
+		ct state established,related accept
+			tcp dport 22 accept
+		ct state new accept		
+	
+	}
+	chain forward {
+		type filter hook forward priority 0;
+	}
+	chain output {
+		type filter hook output priority 0;
+	}
+}
+
+table ip nat{
+	chain prerouting{
+		type nat hook prerouting priority -100;
+	}
+
+	chain postrouting{
+		type nat hook postrouting priority 100;
+		oifname "ens3" masquerade
+	}
+}

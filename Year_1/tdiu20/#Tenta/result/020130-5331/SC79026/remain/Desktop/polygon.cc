@@ -1,0 +1,53 @@
+//polygon.cc
+
+#include "polygon.h"
+#include <string>
+#include <sstream>
+#include <iostream>
+
+
+Polygon::Polygon(int side_length, std::vector<int> side_length_vector)
+    : side_length{side_length}, side_length_vector{side_length_vector}
+{}
+
+
+Polygon::Polygon(std::initializer_list<int> & vector)
+    : Polygon(side_length, side_length_vector)
+{
+    for(int side_length : vector)
+    {
+        side_length_vector.push_back(side_length);
+    }
+}
+
+
+std::string Polygon::to_string()
+{
+    std::string str;
+    for(int i{}; i < side_length_vector.size(); i++)
+    {
+        str += side_length_vector.at(i);
+    }
+    return str;
+}
+
+Polygon Polygon::operator+=(int const rhs)
+{
+    side_length_vector.push_back(rhs);
+    return *this;
+}
+
+Polygon Polygon::operator+(int const rhs)
+{
+    Polygon new_polygon{};
+    new_polygon = *this += rhs;
+    return new_polygon;
+    
+}
+
+
+std::ostream& operator<<(std::ostream& os, Polygon const& other)
+{
+    os << other.to_string();
+    return os;
+}

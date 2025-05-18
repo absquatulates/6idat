@@ -1,0 +1,7 @@
+LAB 4
+
+1
+Vad är en shebang?
+    En rad kod högst upp i filen som specifierar vilken interpreter som ska användas
+
+2

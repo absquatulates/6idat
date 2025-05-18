@@ -1,0 +1,144 @@
+V "GNAT Lib v10"
+P ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U date_handling%b	date_handling.adb	815d5807 NE OO PK
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z system.val_int%s	s-valint.adb		s-valint.ali
+
+U date_handling%s	date_handling.ads	d612b662 EE OO PK
+Z ada.tags%s		a-tags.adb		a-tags.ali
+Z system%s		system.ads		system.ali
+Z system.exception_table%s  s-exctab.adb	s-exctab.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20230707070819 76789da1 ada%s
+D a-except.ads		20230707070819 a7106115 ada.exceptions%s
+D a-inteio.ads		20230707070819 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20230707070819 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20230707070819 119b8fb3 ada.streams%s
+D a-tags.ads		20230707070819 491b781d ada.tags%s
+D a-textio.ads		20230707070819 aef4d56d ada.text_io%s
+D a-tiinio.ads		20230707070819 390edddb ada.text_io.integer_io%s
+D a-unccon.ads		20230707070819 0e9b276f ada.unchecked_conversion%s
+D date_handling.ads	20231120174157 d612b662 date_handling%s
+D date_handling.adb	20231120175147 0ff0b2ac date_handling%b
+D interfac.ads		20230707070819 5ab55268 interfaces%s
+D i-cstrea.ads		20230707070819 e53d8b8e interfaces.c_streams%s
+D system.ads		20230707070819 4635ec04 system%s
+D s-crtl.ads		20230707070819 0ebbdb71 system.crtl%s
+D s-exctab.ads		20230707070819 54135002 system.exception_table%s
+D s-ficobl.ads		20230707070819 078245e4 system.file_control_block%s
+D s-parame.ads		20230707070819 48ec542b system.parameters%s
+D s-secsta.ads		20230707070819 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20230707070819 a7318a92 system.soft_links%s
+D s-stache.ads		20230707070819 a37c21ec system.stack_checking%s
+D s-stalib.ads		20230707070819 09bd3940 system.standard_library%s
+D s-stoele.ads		20230707070819 2dc34a04 system.storage_elements%s
+D s-traent.ads		20230707070819 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20230707070819 34867c83 system.unsigned_types%s
+D s-valint.ads		20230707070819 b5ff6963 system.val_int%s
+D s-wchcon.ads		20230707070819 1b7d22d2 system.wch_con%s
+G a e
+G c Z s b [get date_handling 9 14 none]
+G c Z s b [put date_handling 10 14 none]
+G c Z s b [next_date date_handling 11 13 none]
+G c Z s b [previous_date date_handling 12 13 none]
+G c Z s b [Ogt date_handling 13 13 none]
+G c Z s b [Olt date_handling 14 13 none]
+G c Z s b [Oeq date_handling 15 13 none]
+G c Z s s [date_typeIP date_handling 21 9 none]
+G c Z b b [Tokday_arrayBIP date_handling 10 4 none]
+G c Z b b [get_correct_string date_handling 15 14 none]
+G c Z b b [format date_handling 45 14 none]
+G c Z b b [year_month date_handling 63 14 none]
+G c Z b b [februari date_handling 75 14 none]
+G c Z b b [day date_handling 101 14 none]
+G c Z b b [skott date_handling 166 13 none]
+X 1 ada.ads
+16K9*Ada 20e8 11|5r6 5r31 6r6 6r31
+X 3 a-inteio.ads
+18K13*Integer_Text_IO[8|46] 11|6w10 6r35
+X 7 a-textio.ads
+57K13*Text_IO 727e16 11|5w10 5r35
+282V13*End_Of_Line{boolean} 11|28s29
+381U14*Get 11|22s10 37s13
+465U14*Put 11|149s7 156s7
+X 8 a-tiinio.ads
+80U14*Put 11|148s7[3|18] 152s10[3|18] 154s7[3|18] 159s10[3|18] 161s7[3|18]
+X 10 date_handling.ads
+5K9*Date_Handling 21E9 28l5 28e18 11|8b14 301l5 301t18
+7R9*Date_Type 9r29 10r28 11r33 11r51 12r37 12r55 13r37 14r37 15r37 21c9 26e17
+. 11|63r36 75r34 101r33 122r30 144r29 166r29 180r33 180r51 182r15 209r37
+. 209r55 211r15 258r37 274r37 287r37
+9U14*Get 9<19 11|122b14 142l8 142t11
+9r19 Date{7R9} 11|122b19 131m7 132m7 133m7 135r18 136m11
+10U14*Put 10>19 11|144b14 164l8 164t11
+10r19 Date{7R9} 11|144b19 148r11 151r10 154r11 158r10 161r11
+11V13*Next_Date{7R9} 11>24 11|180b13 207l8 207t17
+11r24 Date{7R9} 11|180b24 182r28 186r20 186r30 186r49 190r19 190r33 192r13
+. 194r27 196r28 199r23
+12V13*Previous_Date{7R9} 12>28 11|209b13 255l8 255t21
+12r28 Date{7R9} 11|209b28 211r28 216r20 216r30 216r49 219r13 220r13 222r27
+. 224r28 228r23
+13V14*">"{boolean} 13>18 13>26 11|258b14 272l9 272t11 279s17 291s17
+13r18 Date_1{7R9} 11|258b18 262r10 264r13 264r43 266r13 266r43 266r75
+13r26 Date_2{7R9} 11|258b26 262r24 264r27 264r58 266r27 266r58 266r88
+14V14*"<"{boolean} 14>18 14>26 11|274b14 285l9 285t11 291s36
+14r18 Date_1{7R9} 11|274b18 279r19
+14r26 Date_2{7R9} 11|274b26 279r10
+15V14*"="{boolean} 15>18 15>26 11|287b14 297l9 297t11
+15r18 Date_1{7R9} 11|287b18 291r10 291r29
+15r26 Date_2{7R9} 11|287b26 291r19 291r38
+17X4*Length_Error 11|29r19 139r12
+17X18*Format_Error 11|52r22 56r22 140r16
+17X32*Year_Error 11|68r16
+17X44*Month_Error 11|70r16
+17X57*Day_Error 11|91r19 95r19 107r16 112r19
+23i10*Year{integer} 11|67r15 67r35 81r15 81r39 83r18 131m12 148r16 170r15
+. 170r39 172r18 194m19 194r32 222m19 222r32 262r17 262r31 264r20 264r34 266r20
+. 266r34
+24i10*Month{integer} 11|69r18 69r36 110r15 110r33 110r51 110r69 116r15 132m12
+. 151r15 154r16 186r35 188m16 190r24 192r18 193m19 196m19 196r33 216r35 218m16
+. 220r18 221m19 224m19 224r33 226r35 264r50 264r65 266r50 266r65
+25i10*Day{integer} 11|90r18 94r18 106r15 106r31 111r18 133m12 158r15 161r16
+. 186r54 187m16 190r38 191m16 199m16 199r28 216r54 217m16 219r18 226m16 228m16
+. 228r28 266r82 266r95
+X 11 date_handling.adb
+10A9 Okday_Array(integer)<integer> 13r20
+13a4 Okday{10A9} 190r13 226r23
+15U14 Get_Correct_String 15b14 15<34 42l8 42t26 128s7
+15a34 S{string} 26r16 28r18 32m10 34r17 35m13
+17e7 C{character} 22m14 23r20 32r18 35r21 37m17
+26i11 I{integer} 28r13 32r12 34r13 35r15
+45U14 Format 45b14 45>22 61l8 61t14 129s7
+45a22 S{string} 49r16 51r16 55r16
+49i11 I{integer} 50r13 50r20 51r18 55r18
+63U14 Year_Month 63b14 63>26 73l8 73t18 135s7 202s7 250s7
+63r26 Date{10|7R9} 67r10 67r30 69r13 69r31
+75U14 Februari 75b14 75>24 99l8 99t16 117s10
+75r24 Date{10|7R9} 81r10 81r34 83r13 90r13 94r13
+77b7 Skott{boolean} 82m10 84m10 86m10 89r10
+101U14 Day 101b14 101=19 120l8 120t11 136s7 203s7 251s7
+101r19 Date{10|7R9} 106r10 106r26 110r10 110r28 110r46 110r64 111r13 116r10
+. 117r19
+124a7 S{string} 128m26 129r14 131r36 132r36 133r36
+166V13 Skott{boolean} 166b13 166>20 178l8 178t13 186s14 216s14
+166r20 Date{10|7R9} 170r10 170r34 172r13
+182r7 NDate{10|7R9} 187m10 188m10 191m10 193m13 194m13 196m13 199m10 202r18
+. 203m11 203r11 205r14
+211r7 PDate{10|7R9} 217m10 218m10 221m13 222m13 224m13 226m10 226r29 228m10
+. 250r18 251m11 251r11 253r14
+

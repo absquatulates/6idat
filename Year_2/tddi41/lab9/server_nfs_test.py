@@ -1,0 +1,67 @@
+import subprocess
+
+#Startade tjänster
+def test_nfsserver_active():
+    result = subprocess.run("systemctl is-active nfs-server.service", shell=True, text=True)
+    assert result.returncode == 0
+
+def test_nfsserver_enabled():
+    result = subprocess.run("systemctl is-enabled nfs-server.service", shell=True, text=True)
+    assert result.returncode == 0
+
+
+#NFTABLES
+def test_nftables_active():
+    result = subprocess.run("systemctl is-active nftables.service", shell=True, text=True)
+    assert result.returncode == 0
+
+def test_nftables_enabled():
+    result = subprocess.run("systemctl is-enabled nftables.service", shell=True, text=True)
+    assert result.returncode == 0
+
+def test_nftables_tcp():
+    result = subprocess.run("nft list ruleset | grep 'tcp.*dport.*2049.*accept' /etc/nftables.conf", shell=True, text=True)
+    assert result.returncode == 0
+
+def test_nftables_udp():
+    result = subprocess.run("nft list ruleset | grep 'udp.*dport.*2049.*accept' /etc/nftables.conf", shell=True, text=True)
+    assert result.returncode == 0
+    
+
+#NFS - export
+def export_client1_usrlocal():
+    result = subprocess.run("exportfs -v | grep '^/usr/local.*10.0.0.3.*rw'", shell=True, text=True)
+    assert result.returncode == 0
+
+def export_client2_userlocal():
+    result = subprocess.run("exportfs -v | grep '^/usr/local.*10.0.0.4.*rw'", shell=True, text=True)
+    assert result.returncode == 0
+
+def export_client1_home1():
+    result = subprocess.run("exportfs -v | grep '^/home1.*10.0.0.3.*rw.*root_squash'", shell=True, text=True)
+    assert result.returncode == 0
+
+def export_client1_home2():
+    result = subprocess.run("exportfs -v | grep '^/home2.*10.0.0.3.*rw.*root_squash'", shell=True, text=True)
+    assert result.returncode == 0
+
+def export_client2_home1():
+    result = subprocess.run("exportfs -v | grep '^/home1.*10.0.0.4.*rw.*root_squash'", shell=True, text=True)
+    assert result.returncode == 0
+
+def export_client2_home2():
+    result = subprocess.run("exportfs -v | grep '^/home2.*10.0.0.4.*rw.*root_squash'", shell=True, text=True)
+    assert result.returncode == 0
+
+def test_export():
+    export_client1_usrlocal()
+    export_client2_userlocal()
+    export_client1_home1()
+    export_client1_home2()
+    export_client2_home1()
+    export_client2_home2()
+    
+
+
+
+

@@ -1,0 +1,125 @@
+V "GNAT Lib v10"
+M P W=b
+P ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U test%b		test.adb		e7c20659 NE OO SU
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z system%s		system.ads		system.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+Z system.exception_table%s  s-exctab.adb	s-exctab.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.val_int%s	s-valint.adb		s-valint.ali
+
+D ada.ads		20230707070819 76789da1 ada%s
+D a-except.ads		20230707070819 a7106115 ada.exceptions%s
+D a-inteio.ads		20230707070819 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20230707070819 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20230707070819 119b8fb3 ada.streams%s
+D a-tags.ads		20230707070819 491b781d ada.tags%s
+D a-textio.ads		20230707070819 aef4d56d ada.text_io%s
+D a-tiinio.ads		20230707070819 390edddb ada.text_io.integer_io%s
+D a-unccon.ads		20230707070819 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20230707070819 5ab55268 interfaces%s
+D i-cstrea.ads		20230707070819 e53d8b8e interfaces.c_streams%s
+D system.ads		20230707070819 4635ec04 system%s
+D s-conca3.ads		20230707070819 0b705ca5 system.concat_3%s
+D s-crtl.ads		20230707070819 0ebbdb71 system.crtl%s
+D s-exctab.ads		20230707070819 54135002 system.exception_table%s
+D s-ficobl.ads		20230707070819 078245e4 system.file_control_block%s
+D s-parame.ads		20230707070819 48ec542b system.parameters%s
+D s-secsta.ads		20230707070819 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20230707070819 a7318a92 system.soft_links%s
+D s-stache.ads		20230707070819 a37c21ec system.stack_checking%s
+D s-stalib.ads		20230707070819 09bd3940 system.standard_library%s
+D s-stoele.ads		20230707070819 2dc34a04 system.storage_elements%s
+D s-traent.ads		20230707070819 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20230707070819 34867c83 system.unsigned_types%s
+D s-valint.ads		20230707070819 b5ff6963 system.val_int%s
+D s-wchcon.ads		20230707070819 1b7d22d2 system.wch_con%s
+D test.adb		20231109143803 bf7d5a90 test%b
+G a e
+G c Z b b [test standard 7 11 none]
+X 1 ada.ads
+16K9*Ada 20e8 27|4r6 4r31 5r6 5r31
+X 3 a-inteio.ads
+18K13*Integer_Text_IO[8|46] 27|5w10 5r35
+X 7 a-textio.ads
+57K13*Text_IO 727e16 27|4w10 4r35
+86I12*Field{integer}
+264U14*New_Line 27|321s7
+273U14*Skip_Line 27|81s16 101s7 157s7 303s13 347s10
+282V13*End_Of_Line{boolean} 27|131s29
+381U14*Get 27|125s10 140s13
+465U14*Put 27|38s10 63s10 65s10 67s10 72s16 74s16 80s16 96s7 103s7 152s7
+. 154s7 275s7 282s7 300s13 308s16 310s16 312s16 314s16 319s7 345s10 362s7
+508U14*Put_Line 27|32s7 33s7 34s7 35s7 41s10 105s7 159s7 355s10
+548X4*Data_Error 27|79r18
+X 8 a-tiinio.ads
+59U14*Get 27|39s10[3|18] 69s13[3|18] 97s7[3|18] 98s7[3|18] 346s10[3|18]
+80U14*Put 27|64s10[3|18] 66s10[3|18] 104s7[3|18] 153s7[3|18] 274s7[3|18]
+. 278s10[3|18] 280s7[3|18] 285s10[3|18] 287s7[3|18]
+82i7 Width{7|86I12} 27|104r18[3|18] 153r19[3|18]
+X 27 test.adb
+7U11*Test 7b11 364l5 364t9
+9X4 Length_Error 132r19 265r12 361r9
+9X18 Format_Error 179r22 183r22 266r16 307r18
+9X32 Year_Error 195r16 309r18
+9X44 Month_Error 197r16 311r18
+9X57 Day_Error 218r19 222r19 233r16 238r19 313r18
+13R9 Date_Type 18e17 190r36 202r34 228r33 248r30 270r29 294r14
+15i10 Year{integer} 194r15 194r35 208r15 208r39 210r18 257m12 274r16
+16i10 Month{integer} 196r18 196r36 236r15 236r33 236r51 236r69 242r15 258m12
+. 277r15 280r16
+17i10 Day{integer} 217r18 221r18 232r15 232r31 237r18 259m12 284r15 287r16
+27V13 Menu_Selection{integer} 27b13 45l8 45t22 339s17
+29i7 N{integer} 39m14 40r20 44r14
+56U14 Get_Safe 56b14 56>24 56>29 57<23 86l8 86t16 100s7
+56i24 Min{integer} 64r14 71r24 77r32
+56i29 Max{integer} 66r14 73r27 77r49
+57i23 Value{integer} 69m17 71r16 73r19 77r23 77r40
+88U14 Upg1 88b14 106l8 106t12 342s10
+90i7 Value{integer} 94m7 100m26 104r11
+90i14 Min{integer} 97m11 100r16
+90i19 Max{integer} 98m11 100r21
+118U14 Get_Correct_String 118b14 118<34 145l8 145t26 156s7 254s7
+118a34 S{string} 129r16 131r18 135m10 137r17 138m13
+120e7 C{character} 125m14 126r20 135r18 138r21 140m17
+129i11 I{integer} 131r13 135r12 137r13 138r15
+147U14 Upg2 147b14 147>20 160l8 160t12 349s10
+147i20 Length{integer} 149r23 153r11
+149a7 S{string} 156m26 159r44
+172U14 Format 172b14 172>22 188l8 188t14 255s7
+172a22 S{string} 176r16 178r16 182r16
+176i11 I{integer} 177r13 177r20 178r18 182r18
+190U14 Year_Month 190b14 190>26 200l8 200t18 261s7
+190r26 Date{13R9} 194r10 194r30 196r13 196r31
+202U14 Februari 202b14 202>24 226l8 226t16 243s10
+202r24 Date{13R9} 208r10 208r34 210r13 217r13 221r13
+204b7 Skott{boolean} 209m10 211m10 213m10 216r10
+228U14 Day 228b14 228=19 246l8 246t11 262s7
+228r19 Date{13R9} 232r10 232r26 236r10 236r28 236r46 236r64 237r13 242r10
+. 243r19
+248U14 Get 248b14 248<19 268l8 268t11 302s13
+248r19 Date{13R9} 257m7 258m7 259m7 261r18 262m11
+250a7 S{string} 254m26 255r14 257r36 258r36 259r36
+270U14 Put 270b14 270>19 290l8 290t11 320s7
+270r19 Date{13R9} 274r11 277r10 280r11 284r10 287r11
+292U14 Upg3 292b14 323l8 323t12 352s10
+294r7 Date{13R9} 302m17 320r11
+335i4 Choice{integer} 339m7 341r10 344r13 351r13
+335i12 Length{integer} 346m14 349r15
+

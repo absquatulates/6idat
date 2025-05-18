@@ -1,0 +1,18 @@
+-- Ada_O11.2 --
+-- hugho678: Samarbetat med carbj841, Carl Björlin, samma pro
+
+with Ada.Command_Line;                use Ada.Command_Line;
+
+procedure Test is
+   
+   
+   
+   
+begin
+   
+   
+   
+   
+   
+   
+end Test;
